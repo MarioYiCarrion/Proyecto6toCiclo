@@ -11,6 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.applepsac.ui.theme.AppLepsacTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,9 +24,25 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppLepsacTheme {
-
+                val navController = rememberNavController()
+                SetupNavGraph(navController = navController)
             }
         }
     }
 }
 
+@Composable
+fun SetupNavGraph(navController: NavHostController) {
+    NavHost(
+        navController = navController,
+        startDestination = "loginScreen"
+    ) {
+        composable("loginScreen") {
+            LoginScreen(navController = navController)
+        }
+        composable("pantallaPrincipal") {
+            // Aquí puedes definir la pantalla principal
+            PantallaPrincipal {}
+        }
+    }
+}
