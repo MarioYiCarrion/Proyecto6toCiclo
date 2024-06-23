@@ -1,5 +1,6 @@
 package com.example.applepsac
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -8,13 +9,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @Composable
-fun RegistrarUsuario() {
+fun RegistrarUsuario(navController: NavHostController) {
     var dni by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
     var apellidoPaterno by remember { mutableStateOf("") }
@@ -24,11 +29,14 @@ fun RegistrarUsuario() {
     var correo by remember { mutableStateOf("") }
     var clave by remember { mutableStateOf("") }
 
+    val auth = FirebaseAuth.getInstance()
+
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
-            .background(Color(0xFFEDEDED)),
+            .padding(16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -101,7 +109,56 @@ fun RegistrarUsuario() {
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                // Aqui ponemos el codigo para conexion a la api
+                auth.createUserWithEmailAndPassword(correo, clave)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // Registro exitoso
+                            val user = auth.currentUser
+                            val userId = user?.uid ?: ""
+
+                            // Guardar información en Firebase Realtime Database
+                            val database = FirebaseDatabase.getInstance()
+                            val ref = database.getReference("clientes")
+
+                            val userData = hashMapOf(
+                                "dni" to dni,
+                                "nombre" to nombre,
+                                "apellidoPaterno" to apellidoPaterno,
+                                "apellidoMaterno" to apellidoMaterno,
+                                "direccion" to direccion,
+                                "celular" to celular,
+                                "correo" to correo,
+                                "clave" to clave
+                                // Agrega más campos si es necesario
+                            )
+
+                            ref.child(userId).setValue(userData)
+                                .addOnCompleteListener { dbTask ->
+                                    if (dbTask.isSuccessful) {
+                                        Toast.makeText(
+                                            context,
+                                            "Usuario registrado exitosamente",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        navController.navigate("loginScreen")
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            "Error al registrar usuario en la base de datos",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+
+                        } else {
+                            // Error en el registro con FirebaseAuth
+                            Toast.makeText(
+                                context,
+                                "Error al registrar usuario: ${task.exception?.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
             },
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {
@@ -110,10 +167,4 @@ fun RegistrarUsuario() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RegistrarUsuarioPreview() {
-    MaterialTheme {
-        RegistrarUsuario()
-    }
-}
+
