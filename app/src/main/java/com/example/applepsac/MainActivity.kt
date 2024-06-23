@@ -45,7 +45,7 @@ fun SetupNavGraph(navController: NavHostController) {
             PantallaPrincipal {}
         }
         composable("RegistrarCliente"){
-            RegistrarUsuario()
+            RegistrarUsuario(navController = navController)
         }
     }
 }

@@ -25,11 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val auth = FirebaseAuth.getInstance()
 
     Column(
         modifier = Modifier
@@ -57,11 +59,7 @@ fun LoginScreen(navController: NavHostController) {
         PasswordField(password) { password = it }
         Spacer(modifier = Modifier.height(32.dp))
         LoginButton {
-            if (username == "admin" && password == "admin") {
-                navController.navigate("pantallaPrincipal")
-            } else {
-                // Mostrar un mensaje de error o manejar la autenticación fallida
-            }
+            loginUser(auth, username, password, navController)
         }
         Spacer(modifier = Modifier.height(16.dp))
         RegistrarButton {
@@ -70,12 +68,25 @@ fun LoginScreen(navController: NavHostController) {
     }
 }
 
+private fun loginUser(auth: FirebaseAuth, username: String, password: String, navController: NavHostController) {
+    auth.signInWithEmailAndPassword(username, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Inicio de sesión exitoso, navegar a la pantalla principal
+                navController.navigate("pantallaPrincipal")
+            } else {
+                // Error en el inicio de sesión, mostrar mensaje o manejar el error
+                // task.exception?.message puede ser útil para obtener detalles del error
+            }
+        }
+}
+
 @Composable
 fun UsernameField(username: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = username,
         onValueChange = onValueChange,
-        label = { Text("Nombre de Usuario") },
+        label = { Text("Correo Electrónico") },
         leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) },
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
@@ -108,7 +119,7 @@ fun PasswordField(password: String, onValueChange: (String) -> Unit) {
             imeAction = ImeAction.Done
         ),
         keyboardActions = KeyboardActions(onDone = {
-            // Manejar el inicio de sesión aquí
+            // Llamar al inicio de sesión aquí
         })
     )
 }
