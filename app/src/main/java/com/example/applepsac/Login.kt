@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
@@ -61,6 +62,10 @@ fun LoginScreen(navController: NavHostController) {
             } else {
                 // Mostrar un mensaje de error o manejar la autenticación fallida
             }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        RegistrarButton {
+            navController.navigate("RegistrarCliente")
         }
     }
 }
@@ -120,3 +125,23 @@ fun LoginButton(onLoginClick: () -> Unit) {
     }
 }
 
+@Composable
+fun RegistrarButton(onClick: () -> Unit){
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+    ){
+        Text(text = "Registrar Cliente", fontSize = 18.sp)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginPreview() {
+    androidx.compose.material3.MaterialTheme {
+        val navController = rememberNavController()
+        LoginScreen(navController = navController)
+    }
+}

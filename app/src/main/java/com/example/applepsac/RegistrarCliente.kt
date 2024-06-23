@@ -101,8 +101,7 @@ fun RegistrarUsuario() {
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                // Aquí puedes manejar el evento de registro
-                // Por ejemplo, enviar los datos a tu backend
+                // Aqui ponemos el codigo para conexion a la api
             },
             modifier = Modifier.fillMaxWidth(0.8f)
         ) {

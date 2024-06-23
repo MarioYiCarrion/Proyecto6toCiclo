@@ -44,5 +44,8 @@ fun SetupNavGraph(navController: NavHostController) {
             // Aquí puedes definir la pantalla principal
             PantallaPrincipal {}
         }
+        composable("RegistrarCliente"){
+            RegistrarUsuario()
+        }
     }
 }
