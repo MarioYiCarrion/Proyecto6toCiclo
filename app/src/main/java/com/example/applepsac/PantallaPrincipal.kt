@@ -23,6 +23,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
@@ -142,6 +143,12 @@ fun BottomNavigationBar() {
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
             label = { Text("Settings") },
+            selected = false,
+            onClick = { /* Acción cuando se selecciona Settings */ }
+        )
+        BottomNavigationItem(
+            icon = { Icon(Icons.Default.Email, contentDescription = "contactanos") },
+            label = { Text("Contactanos") },
             selected = false,
             onClick = { /* Acción cuando se selecciona Settings */ }
         )
