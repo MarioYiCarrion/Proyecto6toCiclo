@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,11 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit) {
@@ -83,10 +84,20 @@ fun DrawerContent(onExitClick: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(top = 48.dp, start = 16.dp, end = 16.dp)
+            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
     ) {
+        Text(
+            text = "Menú",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(vertical = 16.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
         DrawerItem(icon = Icons.Default.Home, text = "Inicio")
         DrawerItem(icon = Icons.Default.Place, text = "Seguimiento de Pedido")
+        DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones")
+        Spacer(modifier = Modifier.weight(1f))
         DrawerItem(icon = Icons.Default.Close, text = "Salir", onClick = onExitClick)
     }
 }
@@ -96,10 +107,9 @@ fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp)
-            .background(Color(0xFFF1F1F1))
-            .padding(8.dp)
             .clickable { onClick?.invoke() }
+            .padding(vertical = 12.dp, horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             imageVector = icon,
@@ -108,7 +118,12 @@ fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
             tint = Color(0xFF6200EE)
         )
         Spacer(modifier = Modifier.width(16.dp))
-        Text(text, fontSize = 18.sp, fontWeight = FontWeight.Medium)
+        Text(
+            text = text,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF333333)
+        )
     }
 }
 
@@ -152,3 +167,10 @@ fun MainContent(modifier: Modifier = Modifier) {
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+fun PantallaPrincipal() {
+    androidx.compose.material3.MaterialTheme {
+        PantallaPrincipal(onExitClick = {})
+    }
+}
