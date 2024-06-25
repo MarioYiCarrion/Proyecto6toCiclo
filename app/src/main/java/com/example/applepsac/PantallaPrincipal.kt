@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -43,8 +44,9 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+
 @Composable
-fun PantallaPrincipal(onExitClick: () -> Unit) {
+fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
@@ -54,10 +56,16 @@ fun PantallaPrincipal(onExitClick: () -> Unit) {
         drawerContent = { DrawerContent(onExitClick) },
         bottomBar = { BottomNavigationBar() }
     ) { paddingValues ->
-        MainContent(
-            Modifier
+        Column(
+            modifier = Modifier
                 .padding(paddingValues)
-                .padding(16.dp))
+                .padding(bottom = 16.dp)
+                .fillMaxSize(), // Asegúrate de que el Column ocupe todo el espacio disponible
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            MainContent(nombreCliente) // Llama a MainContent dentro del Column, que es un @Composable válido
+        }
     }
 }
 
@@ -156,28 +164,27 @@ fun BottomNavigationBar() {
 }
 
 @Composable
-fun MainContent(modifier: Modifier = Modifier) {
+fun MainContent(nombreCliente: String) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "¡Bienvenido a Lepsac!!!",
+            text = "¡Bienvenido $nombreCliente!",
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h4,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF6200EE)
+            color = Color(0xFF6200EE),
+            modifier = Modifier.padding(16.dp)
         )
     }
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun PantallaPrincipal() {
     androidx.compose.material3.MaterialTheme {
         PantallaPrincipal(onExitClick = {})
     }
-}
+}*/
