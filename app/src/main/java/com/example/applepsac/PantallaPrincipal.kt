@@ -46,6 +46,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 
     val topBarTitle = when (currentRoute) {
         "sugerencias" -> "Enviar Sugerencias"
+        "rate" -> "Califícanos"
         else -> "Pantalla Principal"
     }
 
@@ -70,7 +71,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen() }
             composable("contact") { ContactScreen() }
             composable("orders") { OrdersScreen() }
-            composable("rate") { RateScreen() }
+            composable("rate") { CalificanosScreen(navController) }
             composable("sugerencias") { EnviarSugerencias(navController) }
         }
     }
