@@ -80,5 +80,9 @@ fun SetupNavGraph(navController: NavHostController) {
         composable("RegistrarCliente") {
             RegistrarUsuario(navController = navController)
         }
+        composable("detallesPedido/{pedidoId}") { backStackEntry ->
+            val pedidoId = backStackEntry.arguments?.getString("pedidoId") ?: ""
+            DetallesdelPedido(navController = navController, pedidoId = pedidoId)
+        }
     }
 }

@@ -106,6 +106,7 @@ fun DrawerContent(onExitClick: () -> Unit) {
         DrawerItem(icon = Icons.Default.Home, text = "Inicio")
         DrawerItem(icon = Icons.Default.Place, text = "Seguimiento de Pedido")
         DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones")
+        DrawerItem(icon = Icons.Default.Settings, text = "Detalles del Pedido")
         Spacer(modifier = Modifier.weight(1f))
         DrawerItem(icon = Icons.Default.Close, text = "Salir", onClick = onExitClick)
     }
