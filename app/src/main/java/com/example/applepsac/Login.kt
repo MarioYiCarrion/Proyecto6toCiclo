@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.applepsac.ui.theme.AppLepsacTheme
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -64,6 +65,10 @@ fun LoginScreen(navController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
         RegistrarButton {
             navController.navigate("RegistrarCliente")
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        RecuperarClaveButton {
+            navController.navigate("PasswordRecoveryScreen")
         }
     }
 }
@@ -148,10 +153,22 @@ fun RegistrarButton(onClick: () -> Unit){
     }
 }
 
+@Composable
+fun RecuperarClaveButton(onClick: () -> Unit){
+    Button(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)
+    ){
+        Text(text = "Recuperar Clave", fontSize = 18.sp)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun LoginPreview() {
-    androidx.compose.material3.MaterialTheme {
+    AppLepsacTheme {
         val navController = rememberNavController()
         LoginScreen(navController = navController)
     }
