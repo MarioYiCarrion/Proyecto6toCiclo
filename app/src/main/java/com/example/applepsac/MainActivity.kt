@@ -73,7 +73,7 @@ fun SetupNavGraph(navController: NavHostController) {
             }
 
             PantallaPrincipal(
-                navController = navController,
+                //navController = navController,
                 onExitClick = { navController.navigate("loginScreen") {
                     popUpTo("pantallaPrincipal") { inclusive = true }
                 }},
