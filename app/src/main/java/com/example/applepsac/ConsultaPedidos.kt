@@ -27,16 +27,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
-import androidx.compose.runtime.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 
 
-data class Pedido(
+data class Pedido1(
     val id: String,
     val fecha: String,
     val estado: String,
@@ -47,9 +44,9 @@ data class Pedido(
 @Composable
 fun OrdersApp(navController: NavHostController) {
     val pedidos = listOf(
-        Pedido("#1234", "14/10/2014", "En progreso", R.drawable.motor),
-        Pedido("#23452", "14/10/2014", "En progreso", R.drawable.control_panel),
-        Pedido("#31352", "14/10/2014", "En progreso", R.drawable.pump)
+        Pedido1("#1234", "14/10/2014", "En progreso", R.drawable.motor),
+        Pedido1("#23452", "14/10/2014", "En progreso", R.drawable.control_panel),
+        Pedido1("#31352", "14/10/2014", "En progreso", R.drawable.pump)
     )
 
     var searchQuery by remember { mutableStateOf("") }
@@ -83,7 +80,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
 }
 
 @Composable
-fun PedidoItem(pedido: Pedido) {
+fun PedidoItem(pedido: Pedido1) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
