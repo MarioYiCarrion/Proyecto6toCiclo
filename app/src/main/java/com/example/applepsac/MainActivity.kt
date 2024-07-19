@@ -86,5 +86,8 @@ fun SetupNavGraph(navController: NavHostController) {
         composable("ConsultaPedidos") {
             OrdersApp(navController = navController)
         }
+        composable("PasswordRecoveryScreen") {
+            PasswordRecoveryScreen(navController = navController)
+        }
     }
 }
