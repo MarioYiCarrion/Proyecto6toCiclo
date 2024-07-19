@@ -43,28 +43,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 
 
 @Composable
-fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
+fun PantallaPrincipal(navController: NavHostController, onExitClick: () -> Unit, nombreCliente: String) {
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { TopBar(scope, scaffoldState) },
-        drawerContent = { DrawerContent(onExitClick) },
+        drawerContent = { DrawerContent(navController,onExitClick) },
         bottomBar = { BottomNavigationBar() }
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .padding(paddingValues)
                 .padding(bottom = 16.dp)
-                .fillMaxSize(), // Asegúrate de que el Column ocupe todo el espacio disponible
+                .fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            MainContent(nombreCliente) // Llama a MainContent dentro del Column, que es un @Composable válido
+            MainContent(nombreCliente)
         }
     }
 }
@@ -88,7 +92,16 @@ fun TopBar(scope: CoroutineScope, scaffoldState: ScaffoldState) {
 }
 
 @Composable
-fun DrawerContent(onExitClick: () -> Unit) {
+fun MyApp() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "main") {
+        composable("main") { PantallaPrincipal(navController = navController, onExitClick = {}, nombreCliente = "Cliente") }
+        composable("orders") { OrdersApp(navController = navController) }
+    }
+}
+
+@Composable
+fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -104,7 +117,7 @@ fun DrawerContent(onExitClick: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(8.dp))
         DrawerItem(icon = Icons.Default.Home, text = "Inicio")
-        DrawerItem(icon = Icons.Default.Place, text = "Seguimiento de Pedido")
+        DrawerItem(icon = Icons.Default.Place, text = "Seguimiento de Pedido", onClick = { navController.navigate("orders") })
         DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones")
         Spacer(modifier = Modifier.weight(1f))
         DrawerItem(icon = Icons.Default.Close, text = "Salir", onClick = onExitClick)

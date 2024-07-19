@@ -73,12 +73,16 @@ fun SetupNavGraph(navController: NavHostController) {
             }
 
             PantallaPrincipal(
+                navController = navController,
                 onExitClick = { /* Implementa la lógica de salida si es necesario */ },
                 nombreCliente = nombreCliente.value // Pasar nombreCliente como parámetro
             )
         }
         composable("RegistrarCliente") {
             RegistrarUsuario(navController = navController)
+        }
+        composable("ConsultaPedidos") {
+            OrdersApp(navController = navController)
         }
     }
 }
