@@ -74,7 +74,9 @@ fun SetupNavGraph(navController: NavHostController) {
 
             PantallaPrincipal(
                 navController = navController,
-                onExitClick = { /* Implementa la lógica de salida si es necesario */ },
+                onExitClick = { navController.navigate("loginScreen") {
+                    popUpTo("pantallaPrincipal") { inclusive = true }
+                }},
                 nombreCliente = nombreCliente.value // Pasar nombreCliente como parámetro
             )
         }
