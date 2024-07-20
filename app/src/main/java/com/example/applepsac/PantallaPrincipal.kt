@@ -2,26 +2,8 @@ package com.example.applepsac
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
@@ -29,54 +11,76 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun PantallaPrincipal(navController: NavHostController, onExitClick: () -> Unit, nombreCliente: String) {
+fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
+    val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val topBarTitle = when (currentRoute) {
+        "sugerencias" -> "Enviar Sugerencias"
+        "rate" -> "Califícanos"
+        else -> "Pantalla Principal"
+    }
+
+    SetSystemBarsColor(color = Color(0xFF6200EE))
+
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = { TopBar(scope, scaffoldState) },
-        drawerContent = { DrawerContent(navController,onExitClick) },
-        bottomBar = { BottomNavigationBar() }
+        topBar = { TopBar(scope, scaffoldState, topBarTitle) },
+        drawerContent = { DrawerContent(navController, onExitClick, scaffoldState, scope) },
+        bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
-        Column(
+        NavHost(
+            navController = navController,
+            startDestination = "home",
             modifier = Modifier
+                .background(Color.White)
                 .padding(paddingValues)
                 .padding(bottom = 16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
         ) {
-            MainContent(nombreCliente)
+            composable("home") { MainContent(nombreCliente) }
+            composable("settings") { SettingsScreen() }
+            composable("contact") { ContactScreen() }
+            composable("orders") { OrdersScreen() }
+            composable("rate") { CalificanosScreen(navController) }
+            composable("sugerencias") { EnviarSugerencias(navController) }
         }
     }
 }
 
 @Composable
-fun TopBar(scope: CoroutineScope, scaffoldState: ScaffoldState) {
+fun TopBar(scope: CoroutineScope, scaffoldState: ScaffoldState, title: String) {
     TopAppBar(
-        title = { Text("Pantalla Principal", fontWeight = FontWeight.Bold, fontSize = 20.sp) },
+        title = { Text(title, fontWeight = FontWeight.Bold) },
         backgroundColor = Color(0xFF6200EE),
         contentColor = Color.White,
         navigationIcon = {
@@ -87,41 +91,60 @@ fun TopBar(scope: CoroutineScope, scaffoldState: ScaffoldState) {
             }) {
                 Icon(Icons.Default.Menu, contentDescription = "Menu")
             }
-        }
+        },
+        modifier = Modifier.statusBarsPadding()
     )
 }
 
 @Composable
-fun MyApp() {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "main") {
-        composable("main") { PantallaPrincipal(navController = navController, onExitClick = {}, nombreCliente = "Cliente") }
-        composable("orders") { OrdersApp(navController = navController) }
-    }
-}
-
-@Composable
-fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit) {
-    Column(
+fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, scaffoldState: ScaffoldState, scope: CoroutineScope) {
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+            .statusBarsPadding()
     ) {
-        Text(
-            text = "Menú",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
+        Column(
             modifier = Modifier
-                .padding(vertical = 16.dp)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        DrawerItem(icon = Icons.Default.Home, text = "Inicio")
-        DrawerItem(icon = Icons.Default.Place, text = "Seguimiento de Pedido", onClick = { navController.navigate("orders") })
-        DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones")
-        DrawerItem(icon = Icons.Default.Settings, text = "Detalles del Pedido")
-        Spacer(modifier = Modifier.weight(1f))
-        DrawerItem(icon = Icons.Default.Close, text = "Salir", onClick = onExitClick)
+                .fillMaxHeight()
+                .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+        ) {
+            Text(
+                text = "Menú",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            DrawerItem(icon = Icons.Default.Home, text = "Inicio", onClick = {
+                navController.navigate("home")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Place, text = "Seguimiento de Pedido", onClick = {
+                navController.navigate("orders")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones", onClick = {
+                navController.navigate("settings")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Email, text = "Enviar Sugerencias", onClick = {
+                navController.navigate("sugerencias")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Star, text = "Califícanos", onClick = {
+                navController.navigate("rate")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            Spacer(modifier = Modifier.weight(1f))
+        }
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(start = 16.dp, bottom = 48.dp, end = 16.dp)
+        ) {
+            DrawerItem(icon = Icons.Default.Close, text = "Salir", onClick = onExitClick)
+        }
     }
 }
 
@@ -151,28 +174,29 @@ fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
 }
 
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
         backgroundColor = Color(0xFF6200EE),
-        contentColor = Color.White
+        contentColor = Color.White,
+        modifier = Modifier.navigationBarsPadding()
     ) {
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             label = { Text("Home") },
-            selected = true,
-            onClick = { /* Acción cuando se selecciona Home */ }
+            selected = navController.currentDestination?.route == "home",
+            onClick = { navController.navigate("home") }
         )
         BottomNavigationItem(
             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
             label = { Text("Settings") },
-            selected = false,
-            onClick = { /* Acción cuando se selecciona Settings */ }
+            selected = navController.currentDestination?.route == "settings",
+            onClick = { navController.navigate("settings") }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Email, contentDescription = "contactanos") },
+            icon = { Icon(Icons.Default.Email, contentDescription = "Contactanos") },
             label = { Text("Contactanos") },
-            selected = false,
-            onClick = { /* Acción cuando se selecciona Settings */ }
+            selected = navController.currentDestination?.route == "contact",
+            onClick = { navController.navigate("contact") }
         )
     }
 }
@@ -180,7 +204,11 @@ fun BottomNavigationBar() {
 @Composable
 fun MainContent(nombreCliente: String) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 16.dp)
+            .statusBarsPadding()
+            .navigationBarsPadding(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -195,10 +223,76 @@ fun MainContent(nombreCliente: String) {
     }
 }
 
-/*@Preview(showBackground = true)
 @Composable
-fun PantallaPrincipal() {
-    androidx.compose.material3.MaterialTheme {
-        PantallaPrincipal(onExitClick = {})
+fun SettingsScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Settings Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
     }
-}*/
+}
+
+@Composable
+fun ContactScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Contact Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
+}
+
+@Composable
+fun OrdersScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Orders Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
+}
+
+@Composable
+fun RateScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Rate Us Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
+}
+
+@Composable
+fun SetSystemBarsColor(color: Color) {
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        val window = (view.context as androidx.activity.ComponentActivity).window
+        window.statusBarColor = color.toArgb()
+        window.navigationBarColor = color.toArgb()
+        val windowInsetsController = WindowCompat.getInsetsController(window, view)
+        windowInsetsController.isAppearanceLightStatusBars = false
+        windowInsetsController.isAppearanceLightNavigationBars = false
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPantallaPrincipal() {
+    PantallaPrincipal(
+        onExitClick = {},
+        nombreCliente = "Cliente"
+    )
+}
