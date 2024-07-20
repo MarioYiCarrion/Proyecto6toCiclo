@@ -1,9 +1,9 @@
 plugins {
-
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("com.google.gms.google-services")
-
+    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.org.jetbrains.kotlin.kapt)
 }
 
 android {
@@ -53,7 +53,7 @@ android {
 }
 
 dependencies {
-
+    // AndroidX Libraries
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -62,24 +62,40 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
+
+    // Compose Libraries
     implementation("androidx.compose.ui:ui:1.6.8")
     implementation("androidx.compose.material:material:1.6.8")
     implementation("androidx.compose.material3:material3:1.2.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
-    implementation("androidx.activity:activity-compose:1.9.0")
-    implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.navigation.compose)
+
+    // Firebase Libraries
     implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
     implementation(libs.firebase.database.ktx)
+
+    // Retrofit Libraries
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    // Hilt Libraries
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
+    // Additional Libraries
     implementation(libs.androidx.runtime.livedata)
+
+    // Testing Libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Debugging Libraries
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
 }

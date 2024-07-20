@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -21,6 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
 import com.example.applepsac.ui.theme.AppLepsacTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -30,6 +32,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
 class MainActivity : ComponentActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -85,6 +89,7 @@ fun SetupNavGraph(navController: NavHostController) {
         }
         composable("ConsultaPedidos") {
             OrdersApp(navController = navController)
+
         }
         composable("PasswordRecoveryScreen") {
             PasswordRecoveryScreen(navController = navController)

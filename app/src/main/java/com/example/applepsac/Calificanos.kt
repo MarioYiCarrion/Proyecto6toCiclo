@@ -137,8 +137,8 @@ fun CalificanosScreen(navController: NavHostController? = null) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewCalificanosScreen() {
-    CalificanosScreen()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewCalificanosScreen() {
+//    CalificanosScreen()
+//}
