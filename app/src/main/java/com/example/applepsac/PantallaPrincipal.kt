@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 
-    val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = viewModel()
+    //val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = viewModel()
 
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
