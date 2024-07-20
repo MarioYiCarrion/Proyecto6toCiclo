@@ -67,7 +67,7 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
     TextField(
         value = query,
         onValueChange = onQueryChange,
-        label = { Text("Buscar Pedidos") },
+        label = { Text("Buscar Pedidosxx") },
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
