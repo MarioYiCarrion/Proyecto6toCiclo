@@ -16,3 +16,4 @@ fun pantallaSeguimientoPedidoScreen(seguimientoPedidoViewModel: SeguimientoPedid
         listadoSeguimientoPedidos(seguimientoPedidoViewModel = seguimientoPedidoViewModel)
     }
 }
+
