@@ -1,5 +1,6 @@
 package com.example.applepsac
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -56,7 +58,17 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
         scaffoldState = scaffoldState,
         topBar = { TopBar(scope, scaffoldState, topBarTitle) },
         drawerContent = { DrawerContent(navController, onExitClick, scaffoldState, scope) },
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Gray)
+            ) {
+                pie(modifier = Modifier.fillMaxWidth())
+            }
+        }
+
+      /*  bottomBar = { BottomNavigationBar(navController) }*/
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -73,8 +85,11 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("orders") { OrdersScreen() }
             composable("rate") { CalificanosScreen(navController) }
             composable("sugerencias") { EnviarSugerencias(navController) }
+
         }
+
     }
+
 }
 
 @Composable
@@ -116,16 +131,12 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 modifier = Modifier.padding(vertical = 16.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            DrawerItem(icon = Icons.Default.Home, text = "Inicio", onClick = {
+            DrawerItem(icon = Icons.Default.Home, text = "Home", onClick = {
                 navController.navigate("home")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
             DrawerItem(icon = Icons.Default.Place, text = "Seguimiento de Pedido", onClick = {
                 navController.navigate("orders")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
-            })
-            DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones", onClick = {
-                navController.navigate("settings")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
             DrawerItem(icon = Icons.Default.Email, text = "Enviar Sugerencias", onClick = {
@@ -134,6 +145,10 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
             })
             DrawerItem(icon = Icons.Default.Star, text = "Califícanos", onClick = {
                 navController.navigate("rate")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones", onClick = {
+                navController.navigate("settings")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
             Spacer(modifier = Modifier.weight(1f))
@@ -172,7 +187,7 @@ fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
         )
     }
 }
-
+/*
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
@@ -200,6 +215,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         )
     }
 }
+*/
 
 @Composable
 fun MainContent(nombreCliente: String) {
@@ -221,6 +237,7 @@ fun MainContent(nombreCliente: String) {
             modifier = Modifier.padding(16.dp)
         )
     }
+
 }
 
 @Composable
@@ -295,4 +312,40 @@ fun PreviewPantallaPrincipal() {
         onExitClick = {},
         nombreCliente = "Cliente"
     )
+}
+
+
+@Composable
+fun pie(modifier: Modifier){
+    Column(modifier = modifier.fillMaxWidth()){
+        HorizontalDivider(
+            Modifier
+                .background(Color(0x0FAFAEAE))
+                .height(1.dp)
+                .fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.size(15.dp))
+        irContactanos()
+        Spacer(modifier = Modifier.size(55.dp))
+
+
+    }
+}
+
+@Composable
+fun irContactanos(){
+    Row (modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
+        androidx.compose.material3.Text(
+            text = "Descubre Mucha mas Cosas de Lepsac ",
+            fontSize = 12.sp,
+            color = Color(0xFFE0E0E0)
+        )
+        androidx.compose.material3.Text(text = " Contactanos Aqui!",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF06145F),
+            modifier = Modifier.clickable { Log.i("TextCLIC", "HOLA texto") }
+        )
+
+    }
 }

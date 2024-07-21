@@ -2,6 +2,8 @@ plugins {
 
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.org.jetbrains.kotlin.kapt)
     id("com.google.gms.google-services")
 
 }
@@ -62,6 +64,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.material.icons.extended)
+
     implementation("androidx.compose.ui:ui:1.6.8")
     implementation("androidx.compose.material:material:1.6.8")
     implementation("androidx.compose.material3:material3:1.2.1")
