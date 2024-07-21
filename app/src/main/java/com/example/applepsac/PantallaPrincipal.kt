@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -80,7 +81,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("home") { MainContent(nombreCliente) }
             composable("settings") { SettingsScreen() }
             composable("contact") { ContactScreen() }
-            composable("orders") { OrdersScreen() }//OrdersScreen(seguimientoPedidoViewModel)
+            composable("orders") { OrdersApp(navController = rememberNavController()) }//OrdersScreen(seguimientoPedidoViewModel)
             composable("rate") { CalificanosScreen(navController) }
             composable("sugerencias") { EnviarSugerencias(navController) }
         }
