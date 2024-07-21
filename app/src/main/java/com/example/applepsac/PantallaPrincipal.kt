@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
@@ -57,7 +58,8 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 
     val topBarTitle = when (currentRoute) {
         "sugerencias" -> "Enviar Sugerencias"
-        "rate" -> "Califícanos"
+        "calificacion" -> "Califícanos"
+        "actualizaciones" -> "Actualizaciones del Sistema"
         else -> "Pantalla Principal"
     }
 
@@ -82,8 +84,9 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen() }
             composable("contact") { ContactScreen() }
             composable("orders") { OrdersApp(navController = rememberNavController()) }//OrdersScreen(seguimientoPedidoViewModel)
-            composable("rate") { CalificanosScreen(navController) }
+            composable("calificacion") { CalificanosScreen(navController) }
             composable("sugerencias") { EnviarSugerencias(navController) }
+            composable("actualizaciones") { HistorialActualizaciones() } // Añadir ruta para actualizaciones
         }
     }
 }
@@ -145,6 +148,10 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
             })
             DrawerItem(icon = Icons.Default.Star, text = "Califícanos", onClick = {
                 navController.navigate("rate")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Info, text = "Actualizaciones del Sistema", onClick = {
+                navController.navigate("actualizaciones")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
             Spacer(modifier = Modifier.weight(1f))
