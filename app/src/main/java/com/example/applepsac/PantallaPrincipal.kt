@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,6 +59,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
     val topBarTitle = when (currentRoute) {
         "sugerencias" -> "Enviar Sugerencias"
         "rate" -> "Califícanos"
+        "settings" -> "Configuraciones"
         else -> "Pantalla Principal"
     }
 
@@ -79,7 +81,8 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
                 .fillMaxSize()
         ) {
             composable("home") { MainContent(nombreCliente) }
-            composable("settings") { SettingsScreen() }
+            composable("settings") { SettingsScreen(navController) }
+            composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
             composable("orders") { OrdersApp(navController = rememberNavController()) }//OrdersScreen(seguimientoPedidoViewModel)
             composable("rate") { CalificanosScreen(navController) }
@@ -235,15 +238,31 @@ fun MainContent(nombreCliente: String) {
 }
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
-        Text("Settings Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { navController.navigate("edit") }
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_persona),
+                contentDescription = null,
+                modifier = Modifier.size(40.dp)
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text("EDITAR PERFIL", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        }
     }
 }
 
