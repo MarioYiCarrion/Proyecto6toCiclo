@@ -36,6 +36,7 @@ class ActualizacionesViewModel : ViewModel() {
             Actualizacion("Cambio en Servicios", "El servicio de atención al cliente ahora está disponible 24/7.", "14-01-2024"),
             Actualizacion("Nuevo Producto", "Se ha lanzado un nuevo producto.", "05-04-2024"),
             Actualizacion("Mantenimiento Programado", "Habrá un mantenimiento programado el 25 de julio.", "18-07-2024"),
+            /// se puede agregar mas para probar el lazycolumn
         )
     }
 
