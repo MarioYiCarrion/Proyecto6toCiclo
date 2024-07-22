@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
@@ -60,6 +61,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
         "sugerencias" -> "Enviar Sugerencias"
         "rate" -> "Califícanos"
         "settings" -> "Configuraciones"
+        "actualizaciones" -> "Actualizaciones del Sistema"
         else -> "Pantalla Principal"
     }
 
@@ -87,6 +89,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("orders") { OrdersApp(navController = rememberNavController()) }//OrdersScreen(seguimientoPedidoViewModel)
             composable("rate") { CalificanosScreen(navController) }
             composable("sugerencias") { EnviarSugerencias(navController) }
+            composable("actualizaciones") { HistorialActualizaciones() }
         }
     }
 }
@@ -150,6 +153,10 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 navController.navigate("rate")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
+            DrawerItem(icon = Icons.Default.Info, text = "Actualizaciones del Sistema", onClick = {
+                navController.navigate("actualizaciones")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
             Spacer(modifier = Modifier.weight(1f))
         }
         Column(
@@ -195,20 +202,20 @@ fun BottomNavigationBar(navController: NavHostController) {
         modifier = Modifier.navigationBarsPadding()
     ) {
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") },
+            icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
+            label = { Text("Inicio") },
             selected = navController.currentDestination?.route == "home",
             onClick = { navController.navigate("home") }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-            label = { Text("Settings") },
+            icon = { Icon(Icons.Default.Settings, contentDescription = "Configuración") },
+            label = { Text("Configuración") },
             selected = navController.currentDestination?.route == "settings",
             onClick = { navController.navigate("settings") }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Email, contentDescription = "Contactanos") },
-            label = { Text("Contactanos") },
+            icon = { Icon(Icons.Default.Email, contentDescription = "Contáctanos") },
+            label = { Text("Contáctanos") },
             selected = navController.currentDestination?.route == "contact",
             onClick = { navController.navigate("contact") }
         )
@@ -276,34 +283,6 @@ fun ContactScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Contact Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-    }
-}
-
-@Composable
-//fun OrdersScreen(seguimientoPedidoViewModel: SeguimientoPedidoViewModel) {
-fun OrdersScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Orders Screen seguimientoPedidoViewModel = ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        //pantallaSeguimientoPedidoScreen(seguimientoPedidoViewModel = seguimientoPedidoViewModel)
-    }
-}
-
-@Composable
-fun RateScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Rate Us Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
     }
 }
 
