@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
@@ -25,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,6 +62,8 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
     val topBarTitle = when (currentRoute) {
         "sugerencias" -> "Enviar Sugerencias"
         "rate" -> "Califícanos"
+        "settings" -> "Configuraciones"
+        "actualizaciones" -> "Actualizaciones del Sistema"
         else -> "Pantalla Principal"
     }
 
@@ -90,11 +94,13 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
                 .fillMaxSize()
         ) {
             composable("home") { MainContent(nombreCliente) }
-            composable("settings") { SettingsScreen() }
+            composable("settings") { SettingsScreen(navController) }
+            composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
             composable("orders") { OrdersApp(navController = rememberNavController()) }//OrdersScreen(seguimientoPedidoViewModel)
             composable("rate") { CalificanosScreen(navController) }
             composable("sugerencias") { EnviarSugerencias(navController) }
+            composable("actualizaciones") { HistorialActualizaciones() }
         }
     }
 }
@@ -155,6 +161,10 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 navController.navigate("rate")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
+            DrawerItem(icon = Icons.Default.Info, text = "Actualizaciones del Sistema", onClick = {
+                navController.navigate("actualizaciones")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
             DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones", onClick = {
                 navController.navigate("settings")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
@@ -204,20 +214,20 @@ fun BottomNavigationBar(navController: NavHostController) {
         modifier = Modifier.navigationBarsPadding()
     ) {
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            label = { Text("Home") },
+            icon = { Icon(Icons.Default.Home, contentDescription = "Inicio") },
+            label = { Text("Inicio") },
             selected = navController.currentDestination?.route == "home",
             onClick = { navController.navigate("home") }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-            label = { Text("Settings") },
+            icon = { Icon(Icons.Default.Settings, contentDescription = "Configuración") },
+            label = { Text("Configuración") },
             selected = navController.currentDestination?.route == "settings",
             onClick = { navController.navigate("settings") }
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Email, contentDescription = "Contactanos") },
-            label = { Text("Contactanos") },
+            icon = { Icon(Icons.Default.Email, contentDescription = "Contáctanos") },
+            label = { Text("Contáctanos") },
             selected = navController.currentDestination?.route == "contact",
             onClick = { navController.navigate("contact") }
         )
@@ -247,15 +257,31 @@ fun MainContent(nombreCliente: String) {
 }
 
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
-        Text("Settings Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { navController.navigate("edit") }
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_persona),
+                contentDescription = null,
+                modifier = Modifier.size(40.dp)
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text("EDITAR PERFIL", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        }
     }
 }
 
@@ -269,34 +295,6 @@ fun ContactScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Contact Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-    }
-}
-
-@Composable
-//fun OrdersScreen(seguimientoPedidoViewModel: SeguimientoPedidoViewModel) {
-fun OrdersScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Orders Screen seguimientoPedidoViewModel = ", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-        //pantallaSeguimientoPedidoScreen(seguimientoPedidoViewModel = seguimientoPedidoViewModel)
-    }
-}
-
-@Composable
-fun RateScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Rate Us Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
     }
 }
 

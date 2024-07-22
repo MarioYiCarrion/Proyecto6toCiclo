@@ -50,7 +50,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppLepsacTheme {
-                val showSplashScreen = remember { mutableStateOf(true) }
+
+                val navController = rememberNavController()
+                SetupNavGraph(navController = navController)
+                /*val showSplashScreen = remember { mutableStateOf(true) }
                 LaunchedEffect(Unit) {
                     delay(3000) // Duración del Splash Screen en milisegundos
                     showSplashScreen.value = false
@@ -60,7 +63,7 @@ class MainActivity : ComponentActivity() {
                 } else {
                     val navController = rememberNavController()
                     SetupNavGraph(navController = navController)
-                }
+                }*/
 
             }
         }
