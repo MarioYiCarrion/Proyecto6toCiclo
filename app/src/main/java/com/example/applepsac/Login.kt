@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.applepsac.ui.theme.AppLepsacTheme
+import com.google.firebase.annotations.concurrent.Background
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -34,42 +36,67 @@ fun LoginScreen(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
     val auth = FirebaseAuth.getInstance()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+    Box(
+        modifier = Modifier.fillMaxSize()
+
     ) {
         Image(
-            painter = painterResource(id = R.drawable.logo),
+            painter = painterResource(id = R.drawable.fondo2),
             contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier.fillMaxSize()
+        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
             modifier = Modifier
-                .size(180.dp)
-                .padding(bottom = 32.dp)
-        )
-        Text(
-            text = "Iniciar Sesión",
-            style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color(0xFF6200EE)),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 32.dp)
-        )
-        UsernameField(username) { username = it }
-        Spacer(modifier = Modifier.height(16.dp))
-        PasswordField(password) { password = it }
-        Spacer(modifier = Modifier.height(32.dp))
-        LoginButton {
-            loginUser(auth, username, password, navController)
+                .fillMaxSize()
+                .padding(horizontal = 24.dp)
+        ){
+
+
+            androidx.compose.material3.Icon(
+                painter = painterResource(id = R.drawable.splash1),
+                null,
+                Modifier.size(280.dp),
+                tint = Color.White
+            )
+
+            UsernameField(username) { username = it }
+            Spacer(modifier = Modifier.height(16.dp))
+            PasswordField(password) { password = it }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(onClick = { /* Acción de recuperación de contraseña */ }) {
+                    Text("Recuperar Contraseña!", color = Color.DarkGray, fontSize = 18.sp)
+                }
+            }
+
+
+            Spacer(modifier = Modifier.height(32.dp))
+            LoginButton {
+                loginUser(auth, username, password, navController)
+            }
+
+
+            androidx.compose.material3.Divider(
+                color = Color.White.copy(alpha = 0.3f),
+                thickness = 3.dp,
+                modifier = Modifier.padding(top = 48.dp)
+            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                androidx.compose.material3.Text(" No tienes cuenta?", color = Color.White, fontSize = 18.sp)
+                androidx.compose.material3.TextButton(onClick = {}) {
+                    androidx.compose.material3.Text("REGISTRATE AQUI!", fontWeight = FontWeight.Bold,color = Color.Blue, fontSize = 18.sp)
+                }
+            }
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        RegistrarButton {
-            navController.navigate("RegistrarCliente")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        RecuperarClaveButton {
-            navController.navigate("PasswordRecoveryScreen")
-        }
+
+
     }
 }
 
@@ -91,13 +118,24 @@ fun UsernameField(username: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = username,
         onValueChange = onValueChange,
-        label = { Text("Correo Electrónico") },
-        leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) },
+        label = { Text("Correo Electrónico", fontWeight = FontWeight.Bold, color = Color.White,fontSize = 20.sp) },
+        leadingIcon = { Icon(imageVector = Icons.Default.Person,tint = Color.White, contentDescription = null) },
+
         modifier = Modifier.fillMaxWidth(),
         singleLine = true,
+
         keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+
+        ),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = Color.White,
+            cursorColor = Color.White,
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = Color.Gray,
+            focusedLabelColor = Color.White,
+            unfocusedLabelColor = Color.Gray
         )
     )
 }
@@ -108,12 +146,12 @@ fun PasswordField(password: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
         value = password,
         onValueChange = onValueChange,
-        label = { Text("Contraseña") },
-        leadingIcon = { Icon(imageVector = Icons.Default.Lock, contentDescription = null) },
+        label = { Text("Contraseña", fontWeight = FontWeight.Bold, color = Color.White,fontSize = 20.sp) },
+        leadingIcon = { Icon(imageVector = Icons.Default.Lock,tint = Color.White, contentDescription = null) },
         trailingIcon = {
-            val image = if (passwordVisible) Icons.Filled.Done else Icons.Filled.Clear
+            val image = if (passwordVisible) Icons.Filled.Done else Icons.Filled.VisibilityOff
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                Icon(imageVector = image, contentDescription = null)
+                Icon(imageVector = image, contentDescription = null, tint = Color.White)
             }
         },
         modifier = Modifier.fillMaxWidth(),
@@ -123,9 +161,19 @@ fun PasswordField(password: String, onValueChange: (String) -> Unit) {
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done
         ),
+
+
         keyboardActions = KeyboardActions(onDone = {
             // Llamar al inicio de sesión aquí
-        })
+        }),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            textColor = Color.White,
+            cursorColor = Color.White,
+            focusedBorderColor = Color.White,
+            unfocusedBorderColor = Color.Gray,
+            focusedLabelColor = Color.White,
+            unfocusedLabelColor = Color.Gray
+        )
     )
 }
 
@@ -133,14 +181,28 @@ fun PasswordField(password: String, onValueChange: (String) -> Unit) {
 fun LoginButton(onLoginClick: () -> Unit) {
     Button(
         onClick = onLoginClick,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Blue,
+            contentColor = Color.White
+        ),
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
     ) {
-        Text(text = "Iniciar Sesión", fontSize = 18.sp)
+        Text(text = "Iniciar Sesión", fontSize = 22.sp)
     }
 }
-
+/*
+@Composable
+fun LoginButton(onLoginClick: () -> Unit) {
+    Button(
+        onClick = onLoginClick,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Text(text = "Iniciar Sesión",fontSize = 24.sp)
+    }
+}
+*/
 @Composable
 fun RegistrarButton(onClick: () -> Unit){
     Button(

@@ -51,9 +51,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppLepsacTheme {
 
-                val navController = rememberNavController()
-                SetupNavGraph(navController = navController)
-                /*val showSplashScreen = remember { mutableStateOf(true) }
+
+                val showSplashScreen = remember { mutableStateOf(true) }
                 LaunchedEffect(Unit) {
                     delay(3000) // Duración del Splash Screen en milisegundos
                     showSplashScreen.value = false
@@ -63,7 +62,7 @@ class MainActivity : ComponentActivity() {
                 } else {
                     val navController = rememberNavController()
                     SetupNavGraph(navController = navController)
-                }*/
+                }
 
             }
         }
@@ -81,16 +80,10 @@ fun SplashScreenContent() {
         Image(
             painter = painterResource(id = R.drawable.splash1),
             contentDescription = "Splash Lepsac",
-            Modifier.size(150.dp,150.dp)
+            Modifier.size(250.dp,250.dp)
         )
 
-        Text(
-            text = "Bienvenid@s",
-            fontSize = 30.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF06145F)
 
-        )
     }
 }
 
