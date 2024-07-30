@@ -72,7 +72,7 @@ fun LoginScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextButton(onClick = { /* Acción de recuperación de contraseña */ }) {
-                    Text("Recuperar Contraseña!", color = Color.DarkGray, fontSize = 18.sp)
+                    Text("Olvidaste tu Contraseña?", color = Color.Blue, fontSize = 17.sp)
                 }
             }
 
@@ -89,9 +89,9 @@ fun LoginScreen(navController: NavHostController) {
                 modifier = Modifier.padding(top = 48.dp)
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                androidx.compose.material3.Text(" No tienes cuenta?", color = Color.White, fontSize = 18.sp)
+                androidx.compose.material3.Text(" No tienes cuenta?", color = Color.White, fontSize = 17.sp)
                 androidx.compose.material3.TextButton(onClick = {}) {
-                    androidx.compose.material3.Text("REGISTRATE AQUI!", fontWeight = FontWeight.Bold,color = Color.Blue, fontSize = 18.sp)
+                    androidx.compose.material3.Text("REGISTRATE AQUI!", fontWeight = FontWeight.Bold,color = Color.Blue, fontSize = 17.sp)
                 }
             }
         }
