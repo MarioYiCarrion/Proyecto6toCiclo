@@ -46,7 +46,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.applepsac.auth.view.DetallesdelPedido
-import com.example.applepsac.auth.view.FaqyGuiasdeuso
+import com.example.applepsac.auth.view.FAQScreen
+
 import com.example.applepsac.auth.view.HistorialNotificaciones
 import com.example.applepsac.auth.view.Notificaciones
 
@@ -116,7 +117,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("detallesp") { DetallesdelPedido() }
             composable("notifica") { Notificaciones() }
             composable("historialnotifica") { HistorialNotificaciones()}
-            composable("faqyg") { FaqyGuiasdeuso()}
+            composable("faqyg") { FAQScreen()}
         }
     }
     }
