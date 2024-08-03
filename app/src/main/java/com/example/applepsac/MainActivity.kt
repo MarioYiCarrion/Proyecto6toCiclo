@@ -91,7 +91,7 @@ class MainActivity : ComponentActivity() {
 
                 val showSplashScreen = remember { mutableStateOf(true) }
                 LaunchedEffect(Unit) {
-                    delay(6100) // Duración del Splash Screen en milisegundos
+                    delay(6500) // Duración del Splash Screen en milisegundos
                     showSplashScreen.value = false
                 }
                 if (showSplashScreen.value) {

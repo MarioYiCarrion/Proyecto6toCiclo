@@ -1,12 +1,15 @@
 package com.example.applepsac
 
 import android.util.Log
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddAlert
+import androidx.compose.material.icons.filled.AddBusiness
+import androidx.compose.material.icons.filled.Assignment
+import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
@@ -19,7 +22,10 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,15 +39,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.applepsac.auth.view.pantallaSeguimientoPedidoScreen
-import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
+import com.example.applepsac.auth.view.DetallesdelPedido
+import com.example.applepsac.auth.view.FaqyGuiasdeuso
+import com.example.applepsac.auth.view.HistorialNotificaciones
+import com.example.applepsac.auth.view.Notificaciones
+
 //import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -62,8 +70,12 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
     val topBarTitle = when (currentRoute) {
         "sugerencias" -> "Enviar Sugerencias"
         "rate" -> "Califícanos"
+        "detallesp" -> "Detalles de Pedidos"
         "settings" -> "Configuraciones"
         "actualizaciones" -> "Actualizaciones del Sistema"
+        "notifica" -> "Notificaciones"
+        "historialnotifica" -> "Historial de Notificaciones"
+        "faqyg" -> "FAQ y Guias de Uso"
         else -> "Pantalla Principal"
     }
 
@@ -101,9 +113,13 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("rate") { CalificanosScreen(navController) }
             composable("sugerencias") { EnviarSugerencias(navController) }
             composable("actualizaciones") { HistorialActualizaciones() }
+            composable("detallesp") { DetallesdelPedido() }
+            composable("notifica") { Notificaciones() }
+            composable("historialnotifica") { HistorialNotificaciones()}
+            composable("faqyg") { FaqyGuiasdeuso()}
         }
     }
-}
+    }
 
 @Composable
 fun TopBar(scope: CoroutineScope, scaffoldState: ScaffoldState, title: String) {
@@ -153,12 +169,29 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
 
+            DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
+                navController.navigate("detallesp")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+
             DrawerItem(icon = Icons.Default.Email, text = "Enviar Sugerencias", onClick = {
                 navController.navigate("sugerencias")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
             DrawerItem(icon = Icons.Default.Star, text = "Califícanos", onClick = {
                 navController.navigate("rate")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Assignment, text = "FAQ y Guias de Uso", onClick = {
+                navController.navigate("faqyg")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.AddAlert, text = "Notificaciones", onClick = {
+                navController.navigate("notifica")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Campaign, text = "Historial de Notificaciones", onClick = {
+                navController.navigate("historialnotifica")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
             DrawerItem(icon = Icons.Default.Info, text = "Actualizaciones del Sistema", onClick = {
@@ -236,6 +269,8 @@ fun BottomNavigationBar(navController: NavHostController) {
 */
 @Composable
 fun MainContent(nombreCliente: String) {
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -331,27 +366,9 @@ fun pie(modifier: Modifier){
                 .fillMaxWidth()
         )
         Spacer(modifier = Modifier.size(15.dp))
-        irContactanos()
-        Spacer(modifier = Modifier.size(55.dp))
 
 
-    }
-}
-
-@Composable
-fun irContactanos(){
-    Row (modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center) {
-        androidx.compose.material3.Text(
-            text = "Descubre Mucha mas Cosas de Lepsac ",
-            fontSize = 12.sp,
-            color = Color(0xFFE0E0E0)
-        )
-        androidx.compose.material3.Text(text = " Contactanos Aqui!",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF06145F),
-            modifier = Modifier.clickable { Log.i("TextCLIC", "HOLA texto") }
-        )
 
     }
 }
+
