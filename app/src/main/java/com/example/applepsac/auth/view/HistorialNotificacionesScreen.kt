@@ -77,7 +77,7 @@ fun NotificationList1() {
         item {
 
             Text(
-                text = "Viernes, 3 Agosto",
+                text = "Viernes, 2 Agosto",
                 fontFamily = Poppins,
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold,
@@ -219,7 +219,7 @@ fun MainToolbar1() {
 //        Spacer(modifier = Modifier.width(20.dp))
 
         Text(
-            text = "Notificaciones",
+            text = "Historial de Notificaciones",
             color = Color.Black,
             fontFamily = ReemKufi,
             fontSize = 24.sp,
