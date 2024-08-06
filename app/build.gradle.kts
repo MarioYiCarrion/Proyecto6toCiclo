@@ -86,6 +86,7 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
+
     // Additional Libraries
     implementation(libs.androidx.runtime.livedata)
 
