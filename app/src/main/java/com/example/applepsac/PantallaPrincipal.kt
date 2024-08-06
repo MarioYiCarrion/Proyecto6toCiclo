@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -49,6 +51,12 @@ import kotlinx.coroutines.launch
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 
     //val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = viewModel()
+
+    val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()
+
+    // Usa el ViewModel aquí
+    val seguimientos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
+
 
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()

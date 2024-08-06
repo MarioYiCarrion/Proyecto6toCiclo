@@ -16,26 +16,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.applepsac.auth.data.network.response.SeguimientoPedidoResponse
 import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
 
 @Composable
-fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewModel) {
+fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()) {
 
     Scaffold() { paddingValues ->
         Box(modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()){
 
-            val seguimientoPedidos = seguimientoPedidoViewModel.getSeguimientos()
+            //val seguimientoPedidos = seguimientoPedidoViewModel.getSeguimientos()
+            val seguimientoPedidos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(seguimientoPedidos){ seguimiento ->
+                items(seguimientoPedidos.value){ seguimiento ->
                     itemSeguimientos(seguimiento)
                 }
             }
@@ -63,7 +66,9 @@ fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse){
                 Text(text = seguimientoPedidoResponse.id.toString(), fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(15.dp))
                 Text(text = seguimientoPedidoResponse.nombre)
+                //Text(text = seguimientoPedidoResponse.title)
                 Spacer(modifier = Modifier.height(15.dp))
+                //Text(text = seguimientoPedidoResponse.body)
                 Text(text = seguimientoPedidoResponse.salario.toString())
             }
         }
