@@ -84,11 +84,13 @@ dependencies {
     // Hilt Libraries
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
 
     // Additional Libraries
     implementation(libs.androidx.runtime.livedata)
+    implementation ("com.google.accompanist:accompanist-pager:0.28.0")
+    implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")
 
     // Testing Libraries
     testImplementation(libs.junit)

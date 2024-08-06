@@ -1,5 +1,6 @@
 package com.example.applepsac
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,7 +51,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
         else -> "Pantalla Principal"
     }
 
-    SetSystemBarsColor(color = Color(0xFF6200EE))
+    SetSystemBarsColor(color = Color(0xFF003366)) // Changed to a professional dark blue
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -81,8 +83,8 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 @Composable
 fun TopBar(scope: CoroutineScope, scaffoldState: ScaffoldState, title: String) {
     TopAppBar(
-        title = { Text(title, fontWeight = FontWeight.Bold) },
-        backgroundColor = Color(0xFF6200EE),
+        title = { Text(title, fontWeight = FontWeight.Bold, fontFamily = FontFamily.SansSerif) },
+        backgroundColor = Color(0xFF003366),
         contentColor = Color.White,
         navigationIcon = {
             IconButton(onClick = {
@@ -114,6 +116,7 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 text = "Menú",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.SansSerif,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -166,14 +169,15 @@ fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
             imageVector = icon,
             contentDescription = text,
             modifier = Modifier.size(24.dp),
-            tint = Color(0xFF6200EE)
+            tint = Color(0xFF003366)
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = text,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF333333)
+            color = Color(0xFF333333),
+            fontFamily = FontFamily.SansSerif
         )
     }
 }
@@ -181,7 +185,7 @@ fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
-        backgroundColor = Color(0xFF6200EE),
+        backgroundColor = Color(0xFF003366),
         contentColor = Color.White,
         modifier = Modifier.navigationBarsPadding()
     ) {
@@ -222,7 +226,8 @@ fun MainContent(nombreCliente: String) {
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h4,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF6200EE),
+            fontFamily = FontFamily.SansSerif,
+            color = Color(0xFF003366),
             modifier = Modifier.padding(16.dp)
         )
     }
@@ -247,12 +252,13 @@ fun SettingsScreen(navController: NavController) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_persona),
                 contentDescription = null,
-                modifier = Modifier.size(40.dp)
+                modifier = Modifier.size(40.dp),
+                tint = Color(0xFF003366)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Text("EDITAR PERFIL", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text("EDITAR PERFIL", fontWeight = FontWeight.Bold, fontSize = 16.sp, fontFamily = FontFamily.SansSerif)
         }
     }
 }
@@ -266,7 +272,26 @@ fun ContactScreen() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Contact Screen", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Text(
+            text = "Contáctanos",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            fontFamily = FontFamily.SansSerif,
+            color = Color(0xFF003366)
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Teléfono: +123 456 7890",
+            fontSize = 16.sp,
+            fontFamily = FontFamily.SansSerif,
+            color = Color(0xFF333333)
+        )
+        Text(
+            text = "Email: contacto@empresa.com",
+            fontSize = 16.sp,
+            fontFamily = FontFamily.SansSerif,
+            color = Color(0xFF333333)
+        )
     }
 }
 
@@ -291,3 +316,4 @@ fun PreviewPantallaPrincipal() {
         nombreCliente = "Cliente"
     )
 }
+
