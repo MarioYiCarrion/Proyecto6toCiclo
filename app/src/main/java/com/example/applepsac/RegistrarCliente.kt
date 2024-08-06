@@ -1,25 +1,34 @@
 package com.example.applepsac
 
-import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrarUsuario(navController: NavHostController? = null) {
@@ -31,6 +40,7 @@ fun RegistrarUsuario(navController: NavHostController? = null) {
     var celular by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
     var clave by remember { mutableStateOf("") }
+    var isLoading by remember { mutableStateOf(false) }
 
     val dniFocusRequester = FocusRequester()
     val nombreFocusRequester = FocusRequester()
@@ -43,203 +53,317 @@ fun RegistrarUsuario(navController: NavHostController? = null) {
     val buttonFocusRequester = FocusRequester()
 
     val auth = if (navController != null) FirebaseAuth.getInstance() else null
-    val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         dniFocusRequester.requestFocus()
     }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
-            Text(
-                text = "Registrar Usuario",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            TextField(
-                value = dni,
-                onValueChange = { dni = it },
-                label = { Text("DNI") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = { nombreFocusRequester.requestFocus() }),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(dniFocusRequester)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            TextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Nombre") },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = { apellidoPaternoFocusRequester.requestFocus() }),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(nombreFocusRequester),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            TextField(
-                value = apellidoPaterno,
-                onValueChange = { apellidoPaterno = it },
-                label = { Text("Apellido Paterno") },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = { apellidoMaternoFocusRequester.requestFocus() }),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(apellidoPaternoFocusRequester),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            TextField(
-                value = apellidoMaterno,
-                onValueChange = { apellidoMaterno = it },
-                label = { Text("Apellido Materno") },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = { direccionFocusRequester.requestFocus() }),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(apellidoMaternoFocusRequester),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            TextField(
-                value = direccion,
-                onValueChange = { direccion = it },
-                label = { Text("Dirección") },
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = { celularFocusRequester.requestFocus() }),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(direccionFocusRequester),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            TextField(
-                value = celular,
-                onValueChange = { celular = it },
-                label = { Text("Celular") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone, imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = { correoFocusRequester.requestFocus() }),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(celularFocusRequester),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            TextField(
-                value = correo,
-                onValueChange = { correo = it },
-                label = { Text("Correo") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
-                keyboardActions = KeyboardActions(onNext = { claveFocusRequester.requestFocus() }),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(correoFocusRequester),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-        item {
-            TextField(
-                value = clave,
-                onValueChange = { clave = it },
-                label = { Text("Clave") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { buttonFocusRequester.requestFocus() }),
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(claveFocusRequester),
-                singleLine = true
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-        item {
-            Spacer(modifier = Modifier.height(16.dp)) // Espacio adicional para asegurar que el botón no quede cubierto
-        }
-        item {
-            Button(
-                onClick = {
-                    auth?.createUserWithEmailAndPassword(correo, clave)
-                        ?.addOnCompleteListener { task ->
-                            if (task.isSuccessful) {
-                                val user = auth.currentUser
-                                val userId = user?.uid ?: ""
+    fun mostrarSnackbar(mensaje: String, esError: Boolean, duracion: Long = 2000L) {
+        val navControllerSnapshot = navController ?: return // Salir si navController es null
 
-                                val database = FirebaseDatabase.getInstance()
-                                val ref = database.getReference("clientes")
-
-                                val userData = hashMapOf(
-                                    "dni" to dni,
-                                    "nombre" to nombre,
-                                    "apellidoPaterno" to apellidoPaterno,
-                                    "apellidoMaterno" to apellidoMaterno,
-                                    "direccion" to direccion,
-                                    "celular" to celular,
-                                    "correo" to correo,
-                                    "clave" to clave
-                                )
-
-                                ref.child(userId).setValue(userData)
-                                    .addOnCompleteListener { dbTask ->
-                                        if (dbTask.isSuccessful) {
-                                            Toast.makeText(
-                                                context,
-                                                "Usuario registrado exitosamente",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            navController?.navigate("loginScreen")
-                                        } else {
-                                            Toast.makeText(
-                                                context,
-                                                "Error al registrar usuario en la base de datos",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    }
-
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "Error al registrar usuario: ${task.exception?.message}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .focusRequester(buttonFocusRequester)
-            ) {
-                Text("Registrar")
+        coroutineScope.launch {
+            val result = snackbarHostState.showSnackbar(
+                message = mensaje,
+                actionLabel = if (!esError) "OK" else null,
+                duration = SnackbarDuration.Short,
+                withDismissAction = true
+            )
+            delay(duracion)
+            if (!esError) {
+                navControllerSnapshot.navigate("loginScreen") {
+                    popUpTo("loginScreen") { inclusive = true }
+                }
+            } else if (result == SnackbarResult.ActionPerformed) {
+                navControllerSnapshot.navigate("loginScreen") {
+                    popUpTo("loginScreen") { inclusive = true }
+                }
             }
         }
-        item {
-            Spacer(modifier = Modifier.height(32.dp))
+    }
+
+    fun validarCampos(): Boolean {
+        return when {
+            dni.isEmpty() || nombre.isEmpty() || apellidoPaterno.isEmpty() || apellidoMaterno.isEmpty() ||
+                    direccion.isEmpty() || celular.isEmpty() || correo.isEmpty() || clave.isEmpty() -> {
+                mostrarSnackbar("Todos los campos deben estar completos.", true)
+                false
+            }
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches() -> {
+                mostrarSnackbar("El correo no tiene un formato válido.", true)
+                false
+            }
+            clave.length < 6 -> {
+                mostrarSnackbar("La clave debe tener al menos 6 caracteres.", true)
+                false
+            }
+            else -> true
         }
     }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFE4E6EB)) // Fondo de pantalla
+            .padding(top = 64.dp) // Ajustar para que no sea tapado por la barra superior
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    text = "Registrar Usuario",
+                    style = MaterialTheme.typography.titleLarge.copy(color = Color(0xFF808D8E))
+                )
+                IconButton(
+                    onClick = { navController?.navigate("loginScreen") },
+                    modifier = Modifier
+                        .background(color = Color(0xFF808D8E), shape = CircleShape)
+                        .size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Cerrar",
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                item {
+                    CustomTextField(
+                        value = dni,
+                        onValueChange = { dni = it },
+                        label = "DNI",
+                        focusRequester = dniFocusRequester,
+                        nextFocusRequester = nombreFocusRequester,
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    CustomTextField(
+                        value = nombre,
+                        onValueChange = { nombre = it },
+                        label = "Nombre",
+                        focusRequester = nombreFocusRequester,
+                        nextFocusRequester = apellidoPaternoFocusRequester,
+                        imeAction = ImeAction.Next
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    CustomTextField(
+                        value = apellidoPaterno,
+                        onValueChange = { apellidoPaterno = it },
+                        label = "Apellido Paterno",
+                        focusRequester = apellidoPaternoFocusRequester,
+                        nextFocusRequester = apellidoMaternoFocusRequester,
+                        imeAction = ImeAction.Next
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    CustomTextField(
+                        value = apellidoMaterno,
+                        onValueChange = { apellidoMaterno = it },
+                        label = "Apellido Materno",
+                        focusRequester = apellidoMaternoFocusRequester,
+                        nextFocusRequester = direccionFocusRequester,
+                        imeAction = ImeAction.Next
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    CustomTextField(
+                        value = direccion,
+                        onValueChange = { direccion = it },
+                        label = "Dirección",
+                        focusRequester = direccionFocusRequester,
+                        nextFocusRequester = celularFocusRequester,
+                        imeAction = ImeAction.Next
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    CustomTextField(
+                        value = celular,
+                        onValueChange = { celular = it },
+                        label = "Celular",
+                        focusRequester = celularFocusRequester,
+                        nextFocusRequester = correoFocusRequester,
+                        keyboardType = KeyboardType.Phone,
+                        imeAction = ImeAction.Next
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    CustomTextField(
+                        value = correo,
+                        onValueChange = { correo = it },
+                        label = "Correo",
+                        focusRequester = correoFocusRequester,
+                        nextFocusRequester = claveFocusRequester,
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                item {
+                    CustomTextField(
+                        value = clave,
+                        onValueChange = { clave = it },
+                        label = "Clave",
+                        focusRequester = claveFocusRequester,
+                        imeAction = ImeAction.Done,
+                        visualTransformation = PasswordVisualTransformation()
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                item {
+                    Spacer(modifier = Modifier.height(16.dp)) // Espacio adicional para asegurar que el botón no quede cubierto
+                }
+                item {
+                    Button(
+                        onClick = {
+                            if (validarCampos()) {
+                                isLoading = true
+                                auth?.createUserWithEmailAndPassword(correo, clave)
+                                    ?.addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            val user = auth.currentUser
+                                            val userId = user?.uid ?: ""
+
+                                            val database = FirebaseDatabase.getInstance()
+                                            val ref = database.getReference("clientes")
+
+                                            val userData = hashMapOf(
+                                                "dni" to dni,
+                                                "nombre" to nombre,
+                                                "apellidoPaterno" to apellidoPaterno,
+                                                "apellidoMaterno" to apellidoMaterno,
+                                                "direccion" to direccion,
+                                                "celular" to celular,
+                                                "correo" to correo,
+                                                "clave" to clave
+                                            )
+
+                                            ref.child(userId).setValue(userData)
+                                                .addOnCompleteListener { dbTask ->
+                                                    isLoading = false
+                                                    if (dbTask.isSuccessful) {
+                                                        mostrarSnackbar("Usuario registrado exitosamente.", false)
+                                                    } else {
+                                                        mostrarSnackbar("Error al registrar usuario en la base de datos.", true)
+                                                    }
+                                                }
+
+                                        } else {
+                                            isLoading = false
+                                            mostrarSnackbar("Error al registrar usuario: ${task.exception?.message}", true)
+                                        }
+                                    }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF808D8E),
+                            contentColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(buttonFocusRequester)
+                    ) {
+                        Text("Registrar")
+                    }
+                }
+                item {
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+            }
+        }
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.Center),
+            snackbar = { data ->
+                Snackbar(
+                    snackbarData = data,
+                    modifier = Modifier.clickable {
+                        if (data.visuals.message == "Usuario registrado exitosamente.") {
+                            navController?.navigate("loginScreen") {
+                                popUpTo("loginScreen") { inclusive = true }
+                            }
+                        }
+                    }
+                )
+            }
+        )
+
+        if (isLoading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x88000000))
+            ) {
+                CircularProgressIndicator(color = Color.White)
+            }
+        }
+    }
+}
+
+@Composable
+fun CustomTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    focusRequester: FocusRequester,
+    nextFocusRequester: FocusRequester? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction,
+    visualTransformation: VisualTransformation = VisualTransformation.None
+) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label, color = Color(0xFF808D8E)) },
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
+            focusedContainerColor = Color.White,
+            unfocusedContainerColor = Color.White,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            cursorColor = Color.Black
+        ),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
+        keyboardActions = KeyboardActions(onAny = {
+            nextFocusRequester?.requestFocus()
+        }),
+        textStyle = TextStyle(color = Color.Black, fontSize = 14.sp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester),
+        visualTransformation = visualTransformation,
+        singleLine = true
+    )
 }
 
 @Preview(showBackground = true)

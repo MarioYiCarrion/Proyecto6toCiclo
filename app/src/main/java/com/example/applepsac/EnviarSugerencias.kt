@@ -1,8 +1,9 @@
 package com.example.applepsac
 
-import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -12,47 +13,50 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun EnviarSugerencias(navController: NavHostController? = null) {
+fun EnviarSugerencias() {
     val maxCharacters = 500
     val scrollState = rememberScrollState()
     val suggestionText = remember { mutableStateOf("") }
     val isSending = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val focusRequester = remember { FocusRequester() } // Añadido para manejar el foco
+    val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(Unit) {
-        focusRequester.requestFocus() // Posicionar el cursor en el BasicTextField
+        focusRequester.requestFocus()
     }
 
     val buttonColor by animateColorAsState(
-        targetValue = if (isSending.value) Color.Gray else Color(0xFF6200EE),
-        animationSpec = tween(durationMillis = 300)
+        targetValue = if (isSending.value) Color.Gray else Color(0xFFB6CBE6),
+        animationSpec = tween(durationMillis = 300),
+        label = "Button Color Animation"
     )
 
     val buttonAlpha by animateFloatAsState(
         targetValue = if (isSending.value) 0.5f else 1f,
-        animationSpec = tween(durationMillis = 300)
+        animationSpec = tween(durationMillis = 300),
+        label = "Button Alpha Animation"
     )
 
     val buttonText = if (isSending.value) "Enviado" else "Enviar"
@@ -60,7 +64,7 @@ fun EnviarSugerencias(navController: NavHostController? = null) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF0F0F0)) // Fondo sutil más claro
+            .background(Color(0xFFE4E6EB))
             .padding(16.dp)
     ) {
         Column(
@@ -70,11 +74,13 @@ fun EnviarSugerencias(navController: NavHostController? = null) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Enviar Sugerencias",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
+            Image(
+                painter = painterResource(id = R.drawable.message),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(196.dp)
+                    .padding(bottom = 16.dp),
+                contentScale = ContentScale.Fit
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -89,10 +95,11 @@ fun EnviarSugerencias(navController: NavHostController? = null) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
+                    .shadow(4.dp, RoundedCornerShape(8.dp))
                     .background(Color.White, shape = RoundedCornerShape(8.dp))
                     .clip(RoundedCornerShape(8.dp))
-                    .border(1.dp, Color.DarkGray, shape = RoundedCornerShape(8.dp)) // Borde oscuro
-                    .focusRequester(focusRequester), // Añadido para manejar el foco
+                    .border(1.dp, Color(0xFFB6CBE6), shape = RoundedCornerShape(8.dp))
+                    .focusRequester(focusRequester),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done,
                     keyboardType = KeyboardType.Text
@@ -115,7 +122,7 @@ fun EnviarSugerencias(navController: NavHostController? = null) {
                         if (suggestionText.value.isEmpty()) {
                             Text(
                                 text = "Escribe tu sugerencia aquí...",
-                                color = Color.Gray,
+                                color = Color(0xFFE4E6EB),
                                 fontSize = 16.sp
                             )
                         }
@@ -126,22 +133,39 @@ fun EnviarSugerencias(navController: NavHostController? = null) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        isSending.value = true
-                        delay(2000) // Simulate network request
-                        isSending.value = false
-                        suggestionText.value = ""
-                    }
-                },
-                colors = ButtonDefaults.buttonColors(backgroundColor = buttonColor),
-                modifier = Modifier
-                    .alpha(buttonAlpha)
-                    .fillMaxWidth()
-                    .height(50.dp)
+            AnimatedVisibility(
+                visible = !isSending.value,
+                enter = fadeIn(animationSpec = tween(700)) + expandVertically(animationSpec = tween(700)),
+                exit = fadeOut(animationSpec = tween(700)) + shrinkVertically(animationSpec = tween(700))
             ) {
-                Text(text = buttonText, color = Color.White, fontSize = 18.sp)
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            isSending.value = true
+                            delay(2000)
+                            isSending.value = false
+                            suggestionText.value = ""
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor),
+                    modifier = Modifier
+                        .alpha(buttonAlpha)
+                        .fillMaxWidth()
+                        .height(50.dp)
+                ) {
+                    Text(text = buttonText, color = Color.Black, fontSize = 18.sp)
+                }
+            }
+
+            AnimatedVisibility(
+                visible = isSending.value,
+                enter = fadeIn(animationSpec = tween(700)) + expandVertically(animationSpec = tween(700)),
+                exit = fadeOut(animationSpec = tween(700)) + shrinkVertically(animationSpec = tween(700))
+            ) {
+                CircularProgressIndicator(
+                    color = Color(0xFF0D6EFD),
+                    modifier = Modifier.size(50.dp)
+                )
             }
         }
     }
