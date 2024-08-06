@@ -30,7 +30,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
@@ -70,7 +73,6 @@ fun SetupNavGraph(navController: NavHostController) {
                         }
 
                         override fun onCancelled(error: DatabaseError) {
-                            // Manejo de errores (opcional)
                         }
                     })
                 }
@@ -93,6 +95,9 @@ fun SetupNavGraph(navController: NavHostController) {
         }
         composable("PasswordRecoveryScreen") {
             PasswordRecoveryScreen(navController = navController)
+        }
+        composable("HistorialActualizaciones") {
+            HistorialActualizaciones()
         }
     }
 }
