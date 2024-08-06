@@ -1,5 +1,7 @@
 package com.example.applepsac
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,7 +13,9 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,10 +33,19 @@ import com.example.applepsac.ui.theme.AppLepsacTheme
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController, context: Context) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var rememberMe by remember { mutableStateOf(false) }
     val auth = FirebaseAuth.getInstance()
+    val sharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+
+    // Load saved credentials
+    LaunchedEffect(Unit) {
+        username = sharedPreferences.getString("username", "") ?: ""
+        password = sharedPreferences.getString("password", "") ?: ""
+        rememberMe = sharedPreferences.getBoolean("remember_me", false)
+    }
 
     Column(
         modifier = Modifier
@@ -46,37 +59,74 @@ fun LoginScreen(navController: NavHostController) {
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
             modifier = Modifier
-                .size(180.dp)
-                .padding(bottom = 32.dp)
+                .size(120.dp)
+                .padding(bottom = 16.dp)
         )
         Text(
             text = "Iniciar Sesión",
-            style = TextStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color(0xFF6200EE)),
+            style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold, color = Color(0xFF6200EE)),
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(bottom = 32.dp)
+            modifier = Modifier.padding(bottom = 24.dp)
         )
         UsernameField(username) { username = it }
         Spacer(modifier = Modifier.height(16.dp))
         PasswordField(password) { password = it }
-        Spacer(modifier = Modifier.height(32.dp))
+        Spacer(modifier = Modifier.height(16.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Checkbox(
+                checked = rememberMe,
+                onCheckedChange = { checked ->
+                    rememberMe = checked
+                }
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "Recordar credenciales", style = TextStyle(fontSize = 14.sp))
+        }
+        Spacer(modifier = Modifier.height(24.dp))
         LoginButton {
-            loginUser(auth, username, password, navController)
+            loginUser(auth, username, password, navController, context, rememberMe)
         }
         Spacer(modifier = Modifier.height(16.dp))
-        RegistrarButton {
-            navController.navigate("RegistrarCliente")
+        // Text links for registration and password recovery
+        TextButton(onClick = { navController.navigate("RegistrarCliente") }) {
+            Text("Regístrate", color = Color(0xFF6200EE))
         }
-        Spacer(modifier = Modifier.height(16.dp))
-        RecuperarClaveButton {
-            navController.navigate("PasswordRecoveryScreen")
+        Spacer(modifier = Modifier.height(8.dp))
+        TextButton(onClick = { navController.navigate("PasswordRecoveryScreen") }) {
+            Text("Olvidaste tu contraseña?", color = Color(0xFF6200EE))
         }
     }
 }
 
-private fun loginUser(auth: FirebaseAuth, username: String, password: String, navController: NavHostController) {
+private fun loginUser(
+    auth: FirebaseAuth,
+    username: String,
+    password: String,
+    navController: NavHostController,
+    context: Context,
+    rememberMe: Boolean
+) {
     auth.signInWithEmailAndPassword(username, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                // Save credentials if rememberMe is true
+                if (rememberMe) {
+                    val sharedPreferences: SharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    with(sharedPreferences.edit()) {
+                        putString("username", username)
+                        putString("password", password)
+                        putBoolean("remember_me", rememberMe)
+                        apply()
+                    }
+                } else {
+                    val sharedPreferences: SharedPreferences = context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    with(sharedPreferences.edit()) {
+                        remove("username")
+                        remove("password")
+                        remove("remember_me")
+                        apply()
+                    }
+                }
                 // Inicio de sesión exitoso, navegar a la pantalla principal
                 navController.navigate("pantallaPrincipal")
             } else {
@@ -136,32 +186,11 @@ fun LoginButton(onLoginClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
+            .shadow(4.dp, shape = MaterialTheme.shapes.medium),
+        shape = MaterialTheme.shapes.medium,
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF6200EE))
     ) {
-        Text(text = "Iniciar Sesión", fontSize = 18.sp)
-    }
-}
-
-@Composable
-fun RegistrarButton(onClick: () -> Unit){
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
-    ){
-        Text(text = "Registrar Cliente", fontSize = 18.sp)
-    }
-}
-
-@Composable
-fun RecuperarClaveButton(onClick: () -> Unit){
-    Button(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)
-    ){
-        Text(text = "Recuperar Clave", fontSize = 18.sp)
+        Text(text = "Iniciar Sesión", fontSize = 18.sp, color = Color.White)
     }
 }
 
@@ -170,6 +199,6 @@ fun RecuperarClaveButton(onClick: () -> Unit){
 fun LoginPreview() {
     AppLepsacTheme {
         val navController = rememberNavController()
-        LoginScreen(navController = navController)
+        LoginScreen(navController = navController, context = LocalContext.current)
     }
 }
