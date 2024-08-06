@@ -32,7 +32,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
