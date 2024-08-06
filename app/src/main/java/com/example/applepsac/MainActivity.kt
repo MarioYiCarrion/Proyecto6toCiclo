@@ -15,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.navigation.NavHostController
@@ -56,7 +57,7 @@ fun SetupNavGraph(navController: NavHostController) {
 
     NavHost(navController = navController, startDestination = "loginScreen") {
         composable("loginScreen") {
-            LoginScreen(navController = navController)
+            LoginScreen(navController = navController, context = LocalContext.current)
         }
         composable("pantallaPrincipal") {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
