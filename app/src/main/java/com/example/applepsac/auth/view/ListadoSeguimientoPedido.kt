@@ -68,11 +68,11 @@ fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse){
             ) {
                 Text(text = seguimientoPedidoResponse.id.toString(), fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(15.dp))
-                //Text(text = seguimientoPedidoResponse.nombre)
-                Text(text = seguimientoPedidoResponse.title)
+                Text(text = seguimientoPedidoResponse.nombre)
+                //Text(text = seguimientoPedidoResponse.title)
                 Spacer(modifier = Modifier.height(15.dp))
-                Text(text = seguimientoPedidoResponse.body)
-                //Text(text = seguimientoPedidoResponse.salario.toString())
+                //Text(text = seguimientoPedidoResponse.body)
+                Text(text = seguimientoPedidoResponse.salario.toString())
             }
         }
     }
