@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,20 +27,36 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+//import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import android.net.Uri
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
+
+    ////val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = viewModel()
+
+    //val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()
+
+    //// Usa el ViewModel aquí
+    //val seguimientos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
+    //val seguimientoPedidos by seguimientoPedidoViewModel.seguimientos.collectAsState()
+
+
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
@@ -76,7 +93,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
-            composable("orders") { OrdersApp(navController = rememberNavController()) }
+            composable("orders") { listadoSeguimientoPedidos()}//{ OrdersApp(navController = rememberNavController()) }
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }

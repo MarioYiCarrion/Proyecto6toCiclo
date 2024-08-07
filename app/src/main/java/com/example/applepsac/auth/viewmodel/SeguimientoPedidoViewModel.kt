@@ -1,38 +1,42 @@
 package com.example.applepsac.auth.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.applepsac.auth.data.network.response.Actualizacion
 import com.example.applepsac.auth.data.network.response.SeguimientoPedidoResponse
 import com.example.applepsac.auth.domain.SeguimientoPedidoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-//import androidx.lifecycle.ViewModel
-//import dagger.hilt.android.lifecycle.HiltViewModel
-//import javax.inject.Inject
+
 @HiltViewModel
-class SeguimientoPedidoViewModel @Inject constructor(private val seguimientoPedidoUseCase: SeguimientoPedidoUseCase):ViewModel() {
+class SeguimientoPedidoViewModel @Inject constructor(
+    private val seguimientoPedidoUseCase: SeguimientoPedidoUseCase
+) : ViewModel() {
 
-    private val _seguimientos = mutableStateOf<List<SeguimientoPedidoResponse>>(emptyList())
-    //private val _posts = MutableLiveData<List<PostResponse>>(emptyList())
-
-    val seguimientos get() = _seguimientos
-
+    //private val _seguimientos = MutableLiveData<List<SeguimientoPedidoResponse>>(emptyList())
+    private val _seguimientos = MutableStateFlow<List<SeguimientoPedidoResponse>>(emptyList())
+    //val seguimientos get() = _seguimientos
+    val seguimientos: StateFlow<List<SeguimientoPedidoResponse>> get() = _seguimientos
 
     init {
-        fetchPosts()
+        fetchSeguimientos()
     }
 
-    private fun fetchPosts() {
+    private fun fetchSeguimientos() {
         viewModelScope.launch {
-            val postList = seguimientoPedidoUseCase()
-            _seguimientos.value = postList
+            val seguimientosList = seguimientoPedidoUseCase()
+            Log.i("OJO",seguimientosList.toString())
+            _seguimientos.value = seguimientosList
         }
     }
 
-    fun getSeguimientos(): List<SeguimientoPedidoResponse> {
-        //viewModelScope.launch { Log.i("POSTLIST",postUseCase().toString()) }
-        return seguimientos.value
-    }
+    //fun getSeguimientos(): List<SeguimientoPedidoResponse>? {
+    //    return seguimientos.value
+    //}
 }
