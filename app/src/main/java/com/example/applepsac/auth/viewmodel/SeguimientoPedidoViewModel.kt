@@ -31,7 +31,7 @@ class SeguimientoPedidoViewModel @Inject constructor(
         }
     }
 
-    fun getSeguimientos(): List<SeguimientoPedidoResponse>? {
-        return seguimientos.value
-    }
+    //fun getSeguimientos(): List<SeguimientoPedidoResponse>? {
+    //    return seguimientos.value
+    //}
 }

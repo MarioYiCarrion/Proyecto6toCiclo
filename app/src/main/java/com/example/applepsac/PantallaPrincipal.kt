@@ -1,20 +1,12 @@
 package com.example.applepsac
 
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.rememberScaffoldState
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -33,20 +25,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+//import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.applepsac.auth.view.pantallaSeguimientoPedidoScreen
 import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
-//import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-//import androidx.hilt.navigation.compose.hiltViewModel
-//import dagger.hilt.android.lifecycle.HiltViewModel
+
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 
@@ -94,9 +83,9 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
-            composable("orders") { OrdersApp(navController = rememberNavController()) }//OrdersScreen(seguimientoPedidoViewModel)
-            composable("rate") { CalificanosScreen(navController) }
-            composable("sugerencias") { EnviarSugerencias(navController) }
+            composable("orders") { OrdersApp(navController = rememberNavController()) }
+            composable("rate") { CalificanosScreen() }
+            composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
         }
     }

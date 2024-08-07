@@ -5,10 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".MiAplicacion"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:name=".MiAplicacion"
+
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
