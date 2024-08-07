@@ -16,6 +16,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,10 +37,11 @@ fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewM
             .fillMaxSize()){
 
             //val seguimientoPedidos = seguimientoPedidoViewModel.getSeguimientos()
-            val seguimientoPedidos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
+            //val seguimientoPedidos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
+            val seguimientoPedidos by seguimientoPedidoViewModel.seguimientos.collectAsState()
 
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(seguimientoPedidos.value){ seguimiento ->
+                items(seguimientoPedidos){ seguimiento ->
                     itemSeguimientos(seguimiento)
                 }
             }
@@ -65,11 +68,11 @@ fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse){
             ) {
                 Text(text = seguimientoPedidoResponse.id.toString(), fontWeight = FontWeight.SemiBold)
                 Spacer(modifier = Modifier.height(15.dp))
-                Text(text = seguimientoPedidoResponse.nombre)
-                //Text(text = seguimientoPedidoResponse.title)
+                //Text(text = seguimientoPedidoResponse.nombre)
+                Text(text = seguimientoPedidoResponse.title)
                 Spacer(modifier = Modifier.height(15.dp))
-                //Text(text = seguimientoPedidoResponse.body)
-                Text(text = seguimientoPedidoResponse.salario.toString())
+                Text(text = seguimientoPedidoResponse.body)
+                //Text(text = seguimientoPedidoResponse.salario.toString())
             }
         }
     }

@@ -5,9 +5,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.applepsac.auth.data.network.response.Actualizacion
 import com.example.applepsac.auth.data.network.response.SeguimientoPedidoResponse
 import com.example.applepsac.auth.domain.SeguimientoPedidoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,8 +19,10 @@ class SeguimientoPedidoViewModel @Inject constructor(
     private val seguimientoPedidoUseCase: SeguimientoPedidoUseCase
 ) : ViewModel() {
 
-    private val _seguimientos = MutableLiveData<List<SeguimientoPedidoResponse>>(emptyList())
-    val seguimientos get() = _seguimientos
+    //private val _seguimientos = MutableLiveData<List<SeguimientoPedidoResponse>>(emptyList())
+    private val _seguimientos = MutableStateFlow<List<SeguimientoPedidoResponse>>(emptyList())
+    //val seguimientos get() = _seguimientos
+    val seguimientos: StateFlow<List<SeguimientoPedidoResponse>> get() = _seguimientos
 
     init {
         fetchSeguimientos()

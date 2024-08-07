@@ -18,8 +18,8 @@ class RetrofitModule {
     @Provides
     fun provideRetrofit():Retrofit{
         return Retrofit.Builder()
-            .baseUrl("https://nodejs-mysql-restapi-test-production-895d.up.railway.app/api/")
-            //.baseUrl("https://jsonplaceholder.typicode.com/")
+            //.baseUrl("https://nodejs-mysql-restapi-test-production-895d.up.railway.app/api/")
+            .baseUrl("https://jsonplaceholder.typicode.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }

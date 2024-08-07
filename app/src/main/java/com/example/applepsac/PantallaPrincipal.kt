@@ -39,18 +39,22 @@ import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import android.net.Uri
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 
-    //val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = viewModel()
+    ////val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = viewModel()
 
-    val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()
+    //val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()
 
-    // Usa el ViewModel aquí
-    val seguimientos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
+    //// Usa el ViewModel aquí
+    //val seguimientos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
+    //val seguimientoPedidos by seguimientoPedidoViewModel.seguimientos.collectAsState()
 
 
     val navController = rememberNavController()
@@ -89,7 +93,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
-            composable("orders") { OrdersApp(navController = rememberNavController()) }
+            composable("orders") { listadoSeguimientoPedidos()}//{ OrdersApp(navController = rememberNavController()) }
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
