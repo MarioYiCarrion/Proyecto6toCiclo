@@ -1,5 +1,6 @@
 package com.example.applepsac
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +34,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import android.net.Uri
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
@@ -265,6 +269,8 @@ fun SettingsScreen(navController: NavController) {
 
 @Composable
 fun ContactScreen() {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -280,17 +286,33 @@ fun ContactScreen() {
             color = Color(0xFF003366)
         )
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(
-            text = "Teléfono: +123 456 7890",
+            text = "Celular: 994269409",
             fontSize = 16.sp,
             fontFamily = FontFamily.SansSerif,
-            color = Color(0xFF333333)
+            color = Color(0xFF333333),
+            modifier = Modifier.clickable {
+                val intent = Intent(Intent.ACTION_DIAL).apply {
+                    data = Uri.parse("tel:994269409")
+                }
+                context.startActivity(intent)
+            }
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
         Text(
-            text = "Email: contacto@empresa.com",
+            text = "Email: info@lepsac.net.pe",
             fontSize = 16.sp,
             fontFamily = FontFamily.SansSerif,
-            color = Color(0xFF333333)
+            color = Color(0xFF333333),
+            modifier = Modifier.clickable {
+                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                    data = Uri.parse("mailto:info@lepsac.net.pe")
+                }
+                context.startActivity(intent)
+            }
         )
     }
 }
