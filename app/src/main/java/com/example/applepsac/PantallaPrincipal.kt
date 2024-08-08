@@ -43,6 +43,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.applepsac.auth.view.FAQScreen
+import com.example.applepsac.auth.view.HistorialNotificaciones
+import com.example.applepsac.auth.view.Notificaciones
 import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 
 @Composable
@@ -67,8 +70,12 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
     val topBarTitle = when (currentRoute) {
         "sugerencias" -> "Enviar Sugerencias"
         "rate" -> "Califícanos"
+        "detallesp" -> "Detalles de Pedidos"
         "settings" -> "Configuraciones"
         "actualizaciones" -> "Actualizaciones del Sistema"
+        "notifica" -> "Notificaciones"
+        "historialnotifica" -> "Historial de Notificaciones"
+        "faqyg" -> "FAQ y Guias de Uso"
         else -> "Pantalla Principal"
     }
 
@@ -97,6 +104,10 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
+            composable("detallesp") { com.example.applepsac.auth.view.DetallesdelPedido() }
+            composable("notifica") { Notificaciones() }
+            composable("historialnotifica") { HistorialNotificaciones() }
+            composable("faqyg") { FAQScreen() }
         }
     }
 }
@@ -137,11 +148,10 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 text = "Menú",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
             Spacer(modifier = Modifier.height(8.dp))
-            DrawerItem(icon = Icons.Default.Home, text = "Inicio", onClick = {
+            DrawerItem(icon = Icons.Default.Home, text = "Home", onClick = {
                 navController.navigate("home")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
@@ -149,10 +159,12 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 navController.navigate("orders")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
-            DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones", onClick = {
-                navController.navigate("settings")
+
+            DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
+                navController.navigate("detallesp")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
+
             DrawerItem(icon = Icons.Default.Email, text = "Enviar Sugerencias", onClick = {
                 navController.navigate("sugerencias")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
@@ -161,8 +173,24 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 navController.navigate("rate")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
+            DrawerItem(icon = Icons.Default.Assignment, text = "FAQ y Guias de Uso", onClick = {
+                navController.navigate("faqyg")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.AddAlert, text = "Notificaciones", onClick = {
+                navController.navigate("notifica")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Campaign, text = "Historial de Notificaciones", onClick = {
+                navController.navigate("historialnotifica")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
             DrawerItem(icon = Icons.Default.Info, text = "Actualizaciones del Sistema", onClick = {
                 navController.navigate("actualizaciones")
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
+            DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones", onClick = {
+                navController.navigate("settings")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
             Spacer(modifier = Modifier.weight(1f))
