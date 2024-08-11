@@ -1,5 +1,6 @@
 package com.example.applepsac.core.retrofit
 
+import com.example.applepsac.auth.data.network.retroclient.DetallePedidoClient
 import com.example.applepsac.auth.data.network.retroclient.IActualizacionClient
 import com.example.applepsac.auth.data.network.retroclient.SeguimientoPedidoClient
 import javax.inject.Singleton
@@ -31,6 +32,12 @@ class RetrofitModule {
     //}
     fun provideSeguimientoPedidoClient(retrofit: Retrofit):SeguimientoPedidoClient{
         return retrofit.create(SeguimientoPedidoClient::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeteallePedido(retrofit: Retrofit):DetallePedidoClient{
+        return  retrofit.create(DetallePedidoClient::class.java)
     }
 
     @Singleton

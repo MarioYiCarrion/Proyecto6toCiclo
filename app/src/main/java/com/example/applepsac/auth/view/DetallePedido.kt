@@ -17,12 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.applepsac.auth.data.network.response.SeguimientoPedidoResponse
-import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
+
+import com.example.applepsac.auth.data.network.response.DetallePedidoResponse
+import com.example.applepsac.auth.viewmodel.DetallePedidoViewModel
+
 
 
 @Composable
-fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()) {
+fun detallePedido(detallePedidoViewModel: DetallePedidoViewModel = hiltViewModel()){
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -30,8 +32,8 @@ fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewM
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
         ) {
-            InfoCardd()
-            val seguimientoPedidos by seguimientoPedidoViewModel.seguimientos.collectAsState()
+            InfoCard()
+            val detallePedido by detallePedidoViewModel.detalleSeguimiento.collectAsState()
 
             LazyColumn(
                 modifier = Modifier
@@ -39,8 +41,8 @@ fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewM
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(seguimientoPedidos) { seguimiento ->
-                    itemSeguimientos(seguimiento)
+                items(detallePedido) { detalle ->
+                    itemDetalle(detalle)
                 }
             }
         }
@@ -48,7 +50,7 @@ fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewM
 }
 
 @Composable
-fun InfoCardd() {
+fun InfoCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,7 +76,7 @@ fun InfoCardd() {
 }
 
 @Composable
-fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse) {
+fun itemDetalle(detallePedidoResponse: DetallePedidoResponse) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = MaterialTheme.shapes.medium,
@@ -93,24 +95,25 @@ fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse) {
             ) {
                 Column {
                     Text(
-                        text = "Nro. ${seguimientoPedidoResponse.id}",
+                        text = "Nro. ${detallePedidoResponse.orden}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Entrega: ${seguimientoPedidoResponse.comentarios}",
+                        text = "Entrega: ${detallePedidoResponse.descripcion_estado}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Descripcion: ${seguimientoPedidoResponse.descripcion}",
+                        text = "Descripcion: ${detallePedidoResponse.comentario}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
                     )
+                    /*
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "estado: ${seguimientoPedidoResponse.estado}",
+                        text = "estado: ${detallePedidoResponse.estado}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
-                    )
+                    )*/
                 }
                 TextButton(onClick = { /* Handle click */ }) {
                     Text(text = "Ver detalle", color = Color(0xFF42A5F5))

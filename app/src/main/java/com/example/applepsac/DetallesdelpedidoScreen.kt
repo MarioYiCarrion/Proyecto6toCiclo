@@ -44,7 +44,7 @@ fun PedidoDetalleContent(pedido: Pedido) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        Text("Detalles del Pedido", fontSize = 24.sp, modifier = Modifier.padding(bottom = 16.dp))
+        Text("Detalles dexxl Pedido", fontSize = 24.sp, modifier = Modifier.padding(bottom = 16.dp))
 
         Text("ID del Pedido: ${pedido.id}", fontSize = 18.sp, modifier = Modifier.padding(bottom = 8.dp))
         Text("Fecha: ${pedido.fecha}", fontSize = 18.sp, modifier = Modifier.padding(bottom = 8.dp))
