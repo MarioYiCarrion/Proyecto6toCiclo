@@ -17,12 +17,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.applepsac.auth.data.network.response.SeguimientoPedidoResponse
 import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
 
 
 @Composable
-fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()) {
+fun listadoSeguimientoPedidos(navController: NavController, seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()) {
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -30,7 +31,7 @@ fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewM
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
         ) {
-            InfoCardd()
+            InfoCard()
             val seguimientoPedidos by seguimientoPedidoViewModel.seguimientos.collectAsState()
 
             LazyColumn(
@@ -40,7 +41,7 @@ fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewM
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(seguimientoPedidos) { seguimiento ->
-                    itemSeguimientos(seguimiento)
+                    ItemSeguimientos(seguimiento, navController)
                 }
             }
         }
@@ -48,7 +49,7 @@ fun listadoSeguimientoPedidos(seguimientoPedidoViewModel: SeguimientoPedidoViewM
 }
 
 @Composable
-fun InfoCardd() {
+fun InfoCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,7 +75,7 @@ fun InfoCardd() {
 }
 
 @Composable
-fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse) {
+fun ItemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse, navController: NavController) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         shape = MaterialTheme.shapes.medium,
@@ -103,16 +104,19 @@ fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse) {
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Descripcion: ${seguimientoPedidoResponse.descripcion}",
+                        text = "Descripción: ${seguimientoPedidoResponse.descripcion}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "estado: ${seguimientoPedidoResponse.estado}",
+                        text = "Estado: ${seguimientoPedidoResponse.estado}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
                     )
                 }
-                TextButton(onClick = { /* Handle click */ }) {
+                TextButton(onClick = {
+                    navController.navigate("detallePedido/${seguimientoPedidoResponse.id}")
+
+                }) {
                     Text(text = "Ver detalle", color = Color(0xFF42A5F5))
                 }
             }

@@ -24,7 +24,11 @@ import com.example.applepsac.auth.viewmodel.DetallePedidoViewModel
 
 
 @Composable
-fun detallePedido(detallePedidoViewModel: DetallePedidoViewModel = hiltViewModel()){
+fun detallePedido(pedidoId: String?, detallePedidoViewModel: DetallePedidoViewModel = hiltViewModel()) {
+    pedidoId?.let {
+        detallePedidoViewModel.loadDetallePedido(it)
+    }
+
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
@@ -32,7 +36,6 @@ fun detallePedido(detallePedidoViewModel: DetallePedidoViewModel = hiltViewModel
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
         ) {
-            InfoCard()
             val detallePedido by detallePedidoViewModel.detalleSeguimiento.collectAsState()
 
             LazyColumn(
@@ -49,31 +52,7 @@ fun detallePedido(detallePedidoViewModel: DetallePedidoViewModel = hiltViewModel
     }
 }
 
-@Composable
-fun InfoCard() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Info,
-                contentDescription = "Info",
-                tint = Color(0xFF42A5F5)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Podrás ver el detalle de tus pedidos en esta sección en unos minutos. Ingresa al detalle para conocer su estado.",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-}
+
 
 @Composable
 fun itemDetalle(detallePedidoResponse: DetallePedidoResponse) {
@@ -95,7 +74,7 @@ fun itemDetalle(detallePedidoResponse: DetallePedidoResponse) {
             ) {
                 Column {
                     Text(
-                        text = "Nro. ${detallePedidoResponse.orden}",
+                        text = "Nro. ${detallePedidoResponse.orden}", // Aquí ya es Int, no String
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
@@ -108,17 +87,10 @@ fun itemDetalle(detallePedidoResponse: DetallePedidoResponse) {
                         text = "Descripcion: ${detallePedidoResponse.comentario}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
                     )
-                    /*
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "estado: ${detallePedidoResponse.estado}",
-                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
-                    )*/
-                }
-                TextButton(onClick = { /* Handle click */ }) {
-                    Text(text = "Ver detalle", color = Color(0xFF42A5F5))
                 }
             }
         }
     }
 }
+
+

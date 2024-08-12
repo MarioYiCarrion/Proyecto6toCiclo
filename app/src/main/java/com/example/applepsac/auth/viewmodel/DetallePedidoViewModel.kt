@@ -1,7 +1,6 @@
 package com.example.applepsac.auth.viewmodel
 
 import android.util.Log
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.applepsac.auth.data.network.response.DetallePedidoResponse
@@ -15,20 +14,22 @@ import javax.inject.Inject
 @HiltViewModel
 class DetallePedidoViewModel @Inject constructor(
     private val detallePedidoUseCase: DetallePedidoUseCase
-): ViewModel() {
+) : ViewModel() {
     private val _detalleSeguimiento = MutableStateFlow<List<DetallePedidoResponse>>(emptyList())
     val detalleSeguimiento: StateFlow<List<DetallePedidoResponse>> get() = _detalleSeguimiento
 
-    init {
-        fetchDetalleSeguimiento()
-    }
-
-    private fun fetchDetalleSeguimiento(){
+    fun loadDetallePedido(pedidoId: String) {
         viewModelScope.launch {
-            val detallePedidoList = detallePedidoUseCase()
-            Log.i("OJO",detallePedidoList.toString())
-            _detalleSeguimiento.value = detallePedidoList
-
+            try {
+                val detallePedidoList = detallePedidoUseCase(pedidoId) // Debería devolver una lista
+                _detalleSeguimiento.value = detallePedidoList
+            } catch (e: Exception) {
+                // Manejo de errores
+                Log.e("ERROR", "Error al cargar detalles del pedido", e)
+            }
         }
     }
 }
+
+
+

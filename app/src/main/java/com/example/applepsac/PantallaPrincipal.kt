@@ -47,6 +47,7 @@ import com.example.applepsac.auth.view.FAQScreen
 import com.example.applepsac.auth.view.HistorialNotificaciones
 import com.example.applepsac.auth.view.Notificaciones
 import com.example.applepsac.auth.view.detallePedido
+import com.example.applepsac.auth.view.DetallePedidoScreen
 import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 
 @Composable
@@ -102,11 +103,11 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
-            composable("orders") { detallePedido() }//{ OrdersApp(navController = rememberNavController()) }
+            composable("orders") { listadoSeguimientoPedidos(navController = navController) }//{ OrdersApp(navController = rememberNavController()) }
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
-            composable("detallesp") { com.example.applepsac.auth.view.DetallesdelPedido() }
+            composable("detallesp") { detallePedido( pedidoId = "1") }
             composable("notifica") { Notificaciones() }
             composable("historialnotifica") { HistorialNotificaciones() }
             composable("faqyg") { FAQScreen() }
