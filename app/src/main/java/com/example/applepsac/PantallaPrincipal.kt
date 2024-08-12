@@ -94,8 +94,8 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { TopBar(scope, scaffoldState, topBarTitle) },
-        drawerContent = { DrawerContent(navController, onExitClick, scaffoldState, scope) }
-     //   bottomBar = { BottomNavigationBar(navController) }
+        drawerContent = { DrawerContent(navController, onExitClick, scaffoldState, scope) },
+        bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -240,7 +240,7 @@ fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
         )
     }
 }
-/*
+
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
@@ -268,7 +268,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         )
     }
 }
-*/
+
 @Composable
 fun MainContent(navController: NavController) {
     Column {
@@ -691,6 +691,9 @@ fun BestSellerSection() {
 }
 
 
+
+
+
 @Composable
 fun BestSellerItems() {
     LazyRow(
@@ -739,19 +742,17 @@ fun BestSellerItems() {
 fun BestSellerItem(
     imagePainter: Painter,
     title: String,
-    /*price: String,
-    discountPercent: Int*/
 ) {
     Card(
         modifier = Modifier
-            .width(200.dp) // Tamaño fijo para el Card
-            .height(250.dp), // Tamaño fijo para el Card
+            .width(180.dp) // Tamaño fijo más pequeño para el Card
+            .height(220.dp), // Tamaño fijo más pequeño para el Card
         shape = RoundedCornerShape(10.dp),
         elevation = 4.dp
     ) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(12.dp)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -759,7 +760,7 @@ fun BestSellerItem(
                 painter = imagePainter,
                 contentDescription = null,
                 modifier = Modifier
-                    .height(150.dp)
+                    .height(100.dp) // Altura de la imagen reducida
                     .fillMaxWidth(),
                 contentScale = ContentScale.Crop
             )
@@ -768,18 +769,11 @@ fun BestSellerItem(
             ) {
                 Text(
                     text = title,
-                    fontSize = 14.sp,
+                    fontSize = 12.sp, // Tamaño de fuente más pequeño
                     color = Color.Black,
-                    maxLines = 2,
+                    maxLines = 2, // Permitir que el título ocupe hasta 3 líneas
                     overflow = TextOverflow.Ellipsis
                 )
-                /*Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "S/$price", fontSize = 16.sp, fontWeight = FontWeight.Bold)
-                    Text(text = "-$discountPercent%", fontSize = 14.sp, color = Color.Red)
-                }*/
             }
         }
     }
