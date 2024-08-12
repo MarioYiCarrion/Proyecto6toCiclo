@@ -25,10 +25,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.applepsac.auth.data.network.request.RegistrarRequest
+import com.example.applepsac.auth.data.network.retroclient.IRegistrarUsuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun RegistrarUsuario(navController: NavHostController? = null) {
@@ -60,8 +64,17 @@ fun RegistrarUsuario(navController: NavHostController? = null) {
         dniFocusRequester.requestFocus()
     }
 
+    val retrofit = remember {
+        Retrofit.Builder()
+            .baseUrl("https://nodejs-mysql-restapi-test-production-895d.up.railway.app/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    val registrarService = retrofit.create(IRegistrarUsuario::class.java)
+
     fun mostrarSnackbar(mensaje: String, esError: Boolean, duracion: Long = 2000L) {
-        val navControllerSnapshot = navController ?: return // Salir si navController es null
+        val navControllerSnapshot = navController ?: return
 
         coroutineScope.launch {
             val result = snackbarHostState.showSnackbar(
@@ -105,8 +118,8 @@ fun RegistrarUsuario(navController: NavHostController? = null) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE4E6EB)) // Fondo de pantalla
-            .padding(top = 64.dp) // Ajustar para que no sea tapado por la barra superior
+            .background(Color(0xFFE4E6EB))
+            .padding(top = 64.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -239,13 +252,14 @@ fun RegistrarUsuario(navController: NavHostController? = null) {
                     Spacer(modifier = Modifier.height(16.dp))
                 }
                 item {
-                    Spacer(modifier = Modifier.height(16.dp)) // Espacio adicional para asegurar que el botón no quede cubierto
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
                 item {
                     Button(
                         onClick = {
                             if (validarCampos()) {
                                 isLoading = true
+
                                 auth?.createUserWithEmailAndPassword(correo, clave)
                                     ?.addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
@@ -268,62 +282,54 @@ fun RegistrarUsuario(navController: NavHostController? = null) {
 
                                             ref.child(userId).setValue(userData)
                                                 .addOnCompleteListener { dbTask ->
-                                                    isLoading = false
                                                     if (dbTask.isSuccessful) {
-                                                        mostrarSnackbar("Usuario registrado exitosamente.", false)
+                                                        coroutineScope.launch {
+                                                            try {
+                                                                val request = RegistrarRequest(
+                                                                    dni = dni,
+                                                                    nombre = nombre,
+                                                                    ap_paterno = apellidoPaterno,
+                                                                    ap_materno = apellidoMaterno,
+                                                                    direccion = direccion,
+                                                                    celular = celular,
+                                                                    correo = correo,
+                                                                    estado = "A",
+                                                                    activo = 1,
+                                                                    password = clave
+                                                                )
+                                                                registrarService.registrarUser(request)
+                                                                mostrarSnackbar("Usuario registrado exitosamente.", false)
+                                                            } catch (e: Exception) {
+                                                                mostrarSnackbar("Error al registrar usuario en la API: ${e.message}", false)
+                                                            } finally {
+                                                                isLoading = false
+                                                            }
+                                                        }
                                                     } else {
-                                                        mostrarSnackbar("Error al registrar usuario en la base de datos.", true)
+                                                        isLoading = false
+                                                        mostrarSnackbar("Error al registrar usuario en la base de datos.", false)
                                                     }
                                                 }
 
                                         } else {
                                             isLoading = false
-                                            mostrarSnackbar("Error al registrar usuario: ${task.exception?.message}", true)
+                                            mostrarSnackbar("Error al registrar usuario: ${task.exception?.message}", false)
                                         }
                                     }
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF808D8E),
-                            contentColor = Color.White
-                        ),
+                        enabled = !isLoading,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
                             .focusRequester(buttonFocusRequester)
                     ) {
                         Text("Registrar")
                     }
-                }
-                item {
-                    Spacer(modifier = Modifier.height(32.dp))
-                }
-            }
-        }
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.Center),
-            snackbar = { data ->
-                Snackbar(
-                    snackbarData = data,
-                    modifier = Modifier.clickable {
-                        if (data.visuals.message == "Usuario registrado exitosamente.") {
-                            navController?.navigate("loginScreen") {
-                                popUpTo("loginScreen") { inclusive = true }
-                            }
-                        }
+                    if (isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
                     }
-                )
-            }
-        )
-
-        if (isLoading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0x88000000))
-            ) {
-                CircularProgressIndicator(color = Color.White)
+                }
             }
         }
     }
@@ -366,8 +372,3 @@ fun CustomTextField(
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun RegistrarUsuarioPreview() {
-    RegistrarUsuario()
-}
