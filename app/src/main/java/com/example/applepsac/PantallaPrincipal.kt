@@ -39,14 +39,24 @@ import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import android.net.Uri
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.applepsac.auth.view.FAQScreen
 import com.example.applepsac.auth.view.HistorialNotificaciones
 import com.example.applepsac.auth.view.Notificaciones
 import com.example.applepsac.auth.view.listadoSeguimientoPedidos
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.delay
 
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
@@ -84,8 +94,8 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { TopBar(scope, scaffoldState, topBarTitle) },
-        drawerContent = { DrawerContent(navController, onExitClick, scaffoldState, scope) },
-        bottomBar = { BottomNavigationBar(navController) }
+        drawerContent = { DrawerContent(navController, onExitClick, scaffoldState, scope) }
+     //   bottomBar = { BottomNavigationBar(navController) }
     ) { paddingValues ->
         NavHost(
             navController = navController,
@@ -96,7 +106,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
                 .padding(bottom = 16.dp)
                 .fillMaxSize()
         ) {
-            composable("home") { MainContent(nombreCliente) }
+            composable("home") { MainContent(navController) }
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
@@ -230,7 +240,7 @@ fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
         )
     }
 }
-
+/*
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     BottomNavigation(
@@ -258,9 +268,15 @@ fun BottomNavigationBar(navController: NavHostController) {
         )
     }
 }
-
+*/
 @Composable
-fun MainContent(nombreCliente: String) {
+fun MainContent(navController: NavController) {
+    Column {
+
+        Content(navController = navController)
+    }
+
+    /*
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -279,7 +295,10 @@ fun MainContent(nombreCliente: String) {
             color = Color(0xFF003366),
             modifier = Modifier.padding(16.dp)
         )
+
     }
+    */
+
 }
 
 @Composable
@@ -384,3 +403,384 @@ fun PreviewPantallaPrincipal() {
     )
 }
 
+//MenuPrincipal
+
+@Composable
+fun Content(navController: NavController) {
+    Column {
+        Spacer(modifier = Modifier.height(12.dp))
+        Header()
+        Spacer(modifier = Modifier.height(16.dp))
+        Promotions()
+        Spacer(modifier = Modifier.height(16.dp))
+        CategorySection(navController = navController) // Pasamos el NavController aquí
+        Spacer(modifier = Modifier.height(16.dp))
+        BestSellerSection()
+    }
+}
+
+
+
+
+
+@Composable
+fun Header() {
+    Card(
+        Modifier
+            .height(64.dp)
+            .padding(horizontal = 16.dp),
+        elevation = 4.dp,
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            QrButton()
+
+            VerticalDivider()
+            Row(Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .clickable { }
+                .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(painter = painterResource(id = R.drawable.ic_money), contentDescription = "", tint = Color(0xFF6FCF97))
+                Column(Modifier.padding(8.dp)) {
+                    Text(text = "S/3,73", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(text = "Dolar", color = MaterialTheme.colors.primary, fontSize = 12.sp)
+                }
+            }
+
+            VerticalDivider()
+            Row(Modifier
+                .fillMaxHeight()
+                .weight(1f)
+                .clickable { }
+                .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(painter = painterResource(id = R.drawable.ic_coin), contentDescription = "", tint = MaterialTheme.colors.primary)
+                Column(Modifier.padding(8.dp)) {
+                    Text(text = "S/4,05", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text(text = "Euro", color = MaterialTheme.colors.primary, fontSize = 12.sp)
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun QrButton() {
+    IconButton(
+        onClick = {},
+        modifier = Modifier
+            .fillMaxHeight()
+            .aspectRatio(1f)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.tipodecambio),
+            contentDescription = "",
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        )
+    }
+}
+
+
+@Composable
+fun VerticalDivider() {
+    Divider(
+        color = Color(0xFFF1F1F1),
+        modifier = Modifier
+            .width(1.dp)
+            .height(32.dp)
+    )
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun Promotions() {
+    val pagerState = rememberPagerState()
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(3000) // Cambia la página cada 3 segundos
+            val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
+            pagerState.animateScrollToPage(nextPage)
+        }
+    }
+
+    HorizontalPager(
+        count = 4, // Cambia esto si tienes más o menos promociones
+        state = pagerState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(160.dp)
+            .padding(horizontal = 16.dp)
+    ) { page ->
+        when (page) {
+            0 -> PromotionItem(
+                imagePainter = painterResource(id = R.drawable.electricidad3),
+                title = "Por todo Agosto",
+                subtitle = "En Tienda",
+                header = "15% Dscto.",
+                backgroundColor = MaterialTheme.colors.primary
+            )
+            1 -> PromotionItem(
+                imagePainter = painterResource(id = R.drawable.targeta1),
+                title = "Paga Con tu Tarjeta",
+                subtitle = "Interbank",
+                header = "20% Dscto."
+                /*backgroundColor = Color(0xff6EB6F5)*/
+            )
+            2 -> PromotionItem(
+                imagePainter = painterResource(id = R.drawable.seguimiento1),
+                title = "Con Nosotros",
+                subtitle = "Tus Pedidos",
+                header = "Siempre llegaran Seguros"
+                /*backgroundColor = Color(0xff6EB6F5)*/
+            )
+            3 -> PromotionItem(
+                imagePainter = painterResource(id = R.drawable.contactos1),
+                title = "Siempre Resolveremos tus dudas",
+                subtitle = "Contactanos",
+                header = "info@lepsac.net.pe",
+//                backgroundColor = Color(0xff6EB6F5)
+            )
+        }
+    }
+}
+
+@Composable
+fun PromotionItem(
+    title: String = "",
+    subtitle: String = "",
+    header: String = "",
+    backgroundColor: Color = Color.Transparent,
+    imagePainter: Painter
+) {
+    Card(
+        Modifier
+            .fillMaxWidth()
+            .height(200.dp), // Ajusta la altura según tus necesidades
+        shape = RoundedCornerShape(10.dp),
+        backgroundColor = backgroundColor,
+        elevation = 0.dp
+    ) {
+        Box {
+            Image(
+                painter = imagePainter,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                Modifier
+                    .padding(16.dp)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = title, fontSize = 14.sp, color = Color.White)
+                Text(text = subtitle, fontSize = 16.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                Text(text = header, fontSize = 28.sp, color = Color.White, fontWeight = FontWeight.Bold)
+            }
+        }
+    }
+}
+
+
+@Composable
+fun CategorySection(navController: NavController) {
+    Column(Modifier.padding(horizontal = 16.dp)) {
+        Row(
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "Categorias", style = MaterialTheme.typography.h6)
+            TextButton(onClick = {}) {
+                Text(text = "Más..", color = MaterialTheme.colors.primary)
+            }
+        }
+
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            CategoryButton(
+                text = "Seguimiento de Pedido",
+                icon = painterResource(id = R.drawable.seguimiento),
+                backgroundColor = Color(0xFFEF5A6F),
+                onClick = { navController.navigate("orders") }
+            )
+            CategoryButton(
+                text = "Detalles de Pedidos",
+                icon = painterResource(id = R.drawable.detalles),
+                backgroundColor = Color(0xFFFFF1DB),
+                onClick = { navController.navigate("detallesp") }
+            )
+            CategoryButton(
+                text = "Enviar Sugerencias",
+                icon = painterResource(id = R.drawable.enviar),
+                backgroundColor = Color(0xFFD4BDAC),
+                onClick = { navController.navigate("sugerencias") }
+            )
+            CategoryButton(
+                text = "Calificanos",
+                icon = painterResource(id = R.drawable.calificanos),
+                backgroundColor = Color(0xFF536493),
+                onClick = { navController.navigate("rate") }
+            )
+        }
+    }
+}
+
+@Composable
+fun CategoryButton(
+    text: String = "",
+    icon: Painter,
+    backgroundColor: Color,
+    onClick: () -> Unit // Añadir onClick como parámetro
+) {
+    Column(
+        Modifier
+            .width(72.dp)
+            .clickable { onClick() } // Ejecutar la acción de onClick
+    ) {
+        Box(
+            Modifier
+                .size(72.dp)
+                .background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .padding(18.dp)
+        ) {
+            Image(painter = icon, contentDescription = "", modifier = Modifier.fillMaxSize())
+        }
+        Text(text = text, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, fontSize = 12.sp)
+    }
+}
+
+
+
+
+@Composable
+fun BestSellerSection() {
+    Column() {
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = "Los Productos del Mes", style = MaterialTheme.typography.h6)
+            TextButton(onClick = {}) {
+                Text(text = "Más..", color = MaterialTheme.colors.primary)
+            }
+        }
+
+        BestSellerItems()
+    }
+}
+
+
+@Composable
+fun BestSellerItems() {
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        item {
+            BestSellerItem(
+                imagePainter = painterResource(id = R.drawable.mas1),
+                title = "P1-25/I2/SVB/HI11 207297 0001457889 EATON ELECTRIC Interruptor General 3 polos + 1 NO + 1 NC 25 A Montaje en.."
+
+            )
+        }
+        item {
+            BestSellerItem(
+                imagePainter = painterResource(id = R.drawable.masreload),
+                title = "FAZ-C32/4 279064 EATON ELECTRIC Int. magnetotérmico FAZ, 32A, 4P, curva C"
+
+            )
+        }
+        item {
+            BestSellerItem(
+                imagePainter = painterResource(id = R.drawable.mas3),
+                title = "DILEM12-10-G(24VDC) 127132 ELECTRIC Mini-Contactor de potencia Conexión a tornillo 3 polos + 1 NO 12 A"
+
+            )
+        }
+        item {
+            BestSellerItem(
+                imagePainter = painterResource(id = R.drawable.mas4),
+                title = "DILM150-XHI22 277950 XTCEXFBG22 ELECTRIC Bloque de contactos auxiliares 2 NO + 2 NC Montaje frontal Co."
+
+            )
+        }
+        item {
+            BestSellerItem(
+                imagePainter = painterResource(id = R.drawable.mas5),
+                title = "ZB12-6 278439 XTOB006BC1 ELECTRIC Relé de sobrecarga 4-6 A 1 NO + 1 NC Montaje directo en DILM7…12"
+
+            )
+        }
+    }
+}
+
+@Composable
+fun BestSellerItem(
+    imagePainter: Painter,
+    title: String,
+    /*price: String,
+    discountPercent: Int*/
+) {
+    Card(
+        modifier = Modifier
+            .width(200.dp) // Tamaño fijo para el Card
+            .height(250.dp), // Tamaño fijo para el Card
+        shape = RoundedCornerShape(10.dp),
+        elevation = 4.dp
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Image(
+                painter = imagePainter,
+                contentDescription = null,
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Crop
+            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = title,
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                /*Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "S/$price", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+                    Text(text = "-$discountPercent%", fontSize = 14.sp, color = Color.Red)
+                }*/
+            }
+        }
+    }
+}
