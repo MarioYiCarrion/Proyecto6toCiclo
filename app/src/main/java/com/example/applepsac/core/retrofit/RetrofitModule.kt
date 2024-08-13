@@ -27,9 +27,7 @@ class RetrofitModule {
 
     @Singleton
     @Provides
-    //fun provideSeguimientoPedidoClient(retrofit: Retrofit):PostClient{
-    //    return retrofit.create(PostClient::class.java)
-    //}
+
     fun provideSeguimientoPedidoClient(retrofit: Retrofit):SeguimientoPedidoClient{
         return retrofit.create(SeguimientoPedidoClient::class.java)
     }

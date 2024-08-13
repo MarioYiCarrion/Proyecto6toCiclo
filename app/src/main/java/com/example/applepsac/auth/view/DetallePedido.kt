@@ -49,31 +49,6 @@ fun detallePedido(detallePedidoViewModel: DetallePedidoViewModel = hiltViewModel
     }
 }
 
-@Composable
-fun InfoCard() {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD))
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Info,
-                contentDescription = "Info",
-                tint = Color(0xFF42A5F5)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Podrás ver el detalle de tus pedidos en esta sección en unos minutos. Ingresa al detalle para conocer su estado.",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-    }
-}
 
 @Composable
 fun itemDetalle(detallePedidoResponse: DetallePedidoResponse) {

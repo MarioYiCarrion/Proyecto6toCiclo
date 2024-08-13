@@ -1,20 +1,15 @@
 package com.example.applepsac.auth.data.network.service
 
 import com.example.applepsac.auth.data.network.response.DetallePedidoResponse
-import com.example.applepsac.auth.data.network.retroclient.DetallePedidoClient
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Path
 
-class DetallePedidoService @Inject constructor  (private val detallePedidoClient: DetallePedidoClient){
-    suspend fun getDetallePedido(): List<DetallePedidoResponse>{
-        return withContext(Dispatchers.IO){
-            val response = detallePedidoClient.getDetallePedido()
-            if (response.isSuccessful){
-                response.body() ?: throw IllegalStateException("Response body is null")
-            }else{
-                throw IllegalStateException("Respuesta no exitosa: ${response.code()}")
-            }
-        }
-    }
+interface DetallePedidoService {
+
+    @GET("estadosposiciones/posicion/{pedidoId}")
+    suspend fun getDetallePedido(
+        @Path("pedidoId") pedidoId: String
+    ): List<DetallePedidoResponse> // Cambiado a lista si esperas múltiples detalles
+
 }
