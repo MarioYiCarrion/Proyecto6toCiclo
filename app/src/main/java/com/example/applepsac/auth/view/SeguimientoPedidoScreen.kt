@@ -19,8 +19,8 @@ fun pantallaSeguimientoPedidoScreen(
         .padding(8.dp)) {
         listadoSeguimientoPedidos(seguimientoPedidoViewModel = seguimientoPedidoViewModel, navController = navController) // Pasa el navController
     }
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> Master
+
+
+

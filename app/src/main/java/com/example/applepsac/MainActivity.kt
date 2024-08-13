@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
 fun SetupNavGraph(navController: NavHostController) {
     val database = Firebase.database
 
-    NavHost(navController = navController, startDestination = "home") {
+    NavHost(navController = navController, startDestination = "loginScreen") {
         composable("loginScreen") {
             LoginScreen(navController = navController, context = LocalContext.current)
         }

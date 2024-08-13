@@ -103,11 +103,11 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
-<<<<<<< HEAD
+
             composable("orders") { listadoSeguimientoPedidos(navController = navController) }//{ OrdersApp(navController = rememberNavController()) }
-=======
+
             composable("orders") { listadoSeguimientoPedidos(navController) }//{ OrdersApp(navController = rememberNavController()) }
->>>>>>> Master
+
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
