@@ -1,11 +1,9 @@
 package com.example.applepsac.auth.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.applepsac.auth.data.network.response.Actualizacion
 import com.example.applepsac.auth.data.network.response.SeguimientoPedidoResponse
 import com.example.applepsac.auth.domain.SeguimientoPedidoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,9 +17,7 @@ class SeguimientoPedidoViewModel @Inject constructor(
     private val seguimientoPedidoUseCase: SeguimientoPedidoUseCase
 ) : ViewModel() {
 
-    //private val _seguimientos = MutableLiveData<List<SeguimientoPedidoResponse>>(emptyList())
     private val _seguimientos = MutableStateFlow<List<SeguimientoPedidoResponse>>(emptyList())
-    //val seguimientos get() = _seguimientos
     val seguimientos: StateFlow<List<SeguimientoPedidoResponse>> get() = _seguimientos
 
     init {

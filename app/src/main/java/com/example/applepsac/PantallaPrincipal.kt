@@ -46,6 +46,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.applepsac.auth.view.FAQScreen
 import com.example.applepsac.auth.view.HistorialNotificaciones
 import com.example.applepsac.auth.view.Notificaciones
+import com.example.applepsac.auth.view.detallePedido
+import com.example.applepsac.auth.view.DetallePedidoScreen
 import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 
 @Composable
@@ -76,6 +78,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
         "notifica" -> "Notificaciones"
         "historialnotifica" -> "Historial de Notificaciones"
         "faqyg" -> "FAQ y Guias de Uso"
+        "orders" -> "Mis Pedidos"
         else -> "Pantalla Principal"
     }
 
@@ -100,11 +103,15 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
-            composable("orders") { listadoSeguimientoPedidos()}//{ OrdersApp(navController = rememberNavController()) }
+
+            composable("orders") { listadoSeguimientoPedidos(navController = navController) }//{ OrdersApp(navController = rememberNavController()) }
+
+            composable("orders") { listadoSeguimientoPedidos(navController) }//{ OrdersApp(navController = rememberNavController()) }
+
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
-            composable("detallesp") { com.example.applepsac.auth.view.DetallesdelPedido() }
+            composable("detallesp") { detallePedido( navController,pedidoId = "1") }
             composable("notifica") { Notificaciones() }
             composable("historialnotifica") { HistorialNotificaciones() }
             composable("faqyg") { FAQScreen() }
@@ -159,7 +166,10 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 navController.navigate("orders")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
-
+            DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
+                navController.navigate("orders")  // Navegar a la lista de pedidos
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
             DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
                 navController.navigate("detallesp")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
