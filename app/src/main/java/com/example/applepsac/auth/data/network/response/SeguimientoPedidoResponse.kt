@@ -6,8 +6,4 @@ data class SeguimientoPedidoResponse (
     val estado: String,
     val descripcion:String
 
-    //val userId: Int,
-    //val id: Int,
-    //val title: String,
-    //val body: String,
 )

@@ -53,7 +53,10 @@ fun detallePedido(navController: NavController, pedidoId: String?, detallePedido
     }
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> Master
 
 @Composable
 fun itemDetalle(detallePedidoResponse: DetallePedidoResponse) {

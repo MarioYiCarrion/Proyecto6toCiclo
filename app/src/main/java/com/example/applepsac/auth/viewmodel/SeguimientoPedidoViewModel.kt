@@ -21,7 +21,7 @@ class SeguimientoPedidoViewModel @Inject constructor(
     val seguimientos: StateFlow<List<SeguimientoPedidoResponse>> get() = _seguimientos
 
     init {
-            fetchSeguimientos()
+        fetchSeguimientos()
     }
 
     private fun fetchSeguimientos() {
