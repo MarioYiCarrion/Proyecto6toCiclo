@@ -119,6 +119,7 @@ fun ItemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse, navCo
                 }) {
                     Text(text = "Ver detalle", color = Color(0xFF42A5F5))
                 }
+
             }
         }
     }

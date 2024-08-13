@@ -107,7 +107,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
-            composable("detallesp") { detallePedido( pedidoId = "1") }
+            composable("detallesp") { detallePedido( navController,pedidoId = "1") }
             composable("notifica") { Notificaciones() }
             composable("historialnotifica") { HistorialNotificaciones() }
             composable("faqyg") { FAQScreen() }
@@ -162,7 +162,10 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 navController.navigate("orders")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
-
+            DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
+                navController.navigate("orders")  // Navegar a la lista de pedidos
+                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            })
             DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
                 navController.navigate("detallesp")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral

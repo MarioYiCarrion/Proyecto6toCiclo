@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 
 import com.example.applepsac.auth.data.network.response.DetallePedidoResponse
 import com.example.applepsac.auth.viewmodel.DetallePedidoViewModel
@@ -24,7 +25,7 @@ import com.example.applepsac.auth.viewmodel.DetallePedidoViewModel
 
 
 @Composable
-fun detallePedido(pedidoId: String?, detallePedidoViewModel: DetallePedidoViewModel = hiltViewModel()) {
+fun detallePedido(navController: NavController, pedidoId: String?, detallePedidoViewModel: DetallePedidoViewModel = hiltViewModel()) {
     pedidoId?.let {
         detallePedidoViewModel.loadDetallePedido(it)
     }

@@ -48,12 +48,12 @@ class MainActivity : ComponentActivity() {
 fun SetupNavGraph(navController: NavHostController) {
     val database = Firebase.database
 
-    NavHost(navController = navController, startDestination = "loginScreen") {
-        composable("home") {
-            listadoSeguimientoPedidos(navController)
-        }
+    NavHost(navController = navController, startDestination = "home") {
         composable("loginScreen") {
             LoginScreen(navController = navController, context = LocalContext.current)
+        }
+        composable("home") {
+            listadoSeguimientoPedidos(navController)
         }
         composable("pantallaPrincipal") {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -101,7 +101,10 @@ fun SetupNavGraph(navController: NavHostController) {
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         ) { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")
-            detallePedido(id)
+            if (id != null) {
+                detallePedido(navController,id)
+            }
         }
+
     }
 }
