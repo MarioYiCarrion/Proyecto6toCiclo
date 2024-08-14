@@ -4,25 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.applepsac.auth.view.DetallePedidoScreen
+import com.example.applepsac.auth.view.detallePedido
+import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
 import com.example.applepsac.ui.theme.AppLepsacTheme
 import com.google.firebase.Firebase
@@ -35,8 +31,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -49,15 +43,17 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
     val database = Firebase.database
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
 
     NavHost(navController = navController, startDestination = "loginScreen") {
         composable("loginScreen") {
             LoginScreen(navController = navController, context = LocalContext.current)
+        }
+        composable("home") {
+            listadoSeguimientoPedidos(navController)
         }
         composable("pantallaPrincipal") {
             val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -73,17 +69,19 @@ fun SetupNavGraph(navController: NavHostController) {
                         }
 
                         override fun onCancelled(error: DatabaseError) {
+                            // Manejar errores si es necesario
                         }
                     })
                 }
             }
 
             PantallaPrincipal(
-                //navController = navController,
-                onExitClick = { navController.navigate("loginScreen") {
-                    popUpTo("pantallaPrincipal") { inclusive = true }
-                }},
-                nombreCliente = nombreCliente.value // Pasar nombreCliente como parámetro
+                onExitClick = {
+                    navController.navigate("loginScreen") {
+                        popUpTo("pantallaPrincipal") { inclusive = true }
+                    }
+                },
+                nombreCliente = nombreCliente.value
             )
         }
         composable("RegistrarCliente") {
@@ -91,7 +89,6 @@ fun SetupNavGraph(navController: NavHostController) {
         }
         composable("ConsultaPedidos") {
             OrdersApp(navController = navController)
-
         }
         composable("PasswordRecoveryScreen") {
             PasswordRecoveryScreen(navController = navController)
@@ -99,5 +96,15 @@ fun SetupNavGraph(navController: NavHostController) {
         composable("HistorialActualizaciones") {
             HistorialActualizaciones()
         }
+        composable(
+            route = "detallePedido/{id}",
+            arguments = listOf(navArgument("id") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id")
+            if (id != null) {
+                detallePedido(navController,id)
+            }
+        }
+
     }
 }

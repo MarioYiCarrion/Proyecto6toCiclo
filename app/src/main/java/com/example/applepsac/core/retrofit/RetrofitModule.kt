@@ -1,5 +1,6 @@
 package com.example.applepsac.core.retrofit
 
+import com.example.applepsac.auth.data.network.retroclient.DetallePedidoClient
 import com.example.applepsac.auth.data.network.retroclient.IActualizacionClient
 import com.example.applepsac.auth.data.network.retroclient.SeguimientoPedidoClient
 import javax.inject.Singleton
@@ -19,18 +20,20 @@ class RetrofitModule {
     fun provideRetrofit():Retrofit{
         return Retrofit.Builder()
             .baseUrl("https://nodejs-mysql-restapi-test-production-895d.up.railway.app/api/")
-            //.baseUrl("https://jsonplaceholder.typicode.com/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
     @Singleton
     @Provides
-    //fun provideSeguimientoPedidoClient(retrofit: Retrofit):PostClient{
-    //    return retrofit.create(PostClient::class.java)
-    //}
     fun provideSeguimientoPedidoClient(retrofit: Retrofit):SeguimientoPedidoClient{
         return retrofit.create(SeguimientoPedidoClient::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDetallePedidoClient(retrofit: Retrofit): DetallePedidoClient {
+        return retrofit.create(DetallePedidoClient::class.java)
     }
 
     @Singleton
