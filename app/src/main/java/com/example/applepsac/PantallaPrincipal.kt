@@ -72,7 +72,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
     val topBarTitle = when (currentRoute) {
         "sugerencias" -> "Enviar Sugerencias"
         "rate" -> "Califícanos"
-        "detallesp" -> "Detalles de Pedidos"
+        "detallePedido/{id}" -> "Detalles de Pedidos"
         "settings" -> "Configuraciones"
         "actualizaciones" -> "Actualizaciones del Sistema"
         "notifica" -> "Notificaciones"
@@ -106,12 +106,15 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 
             composable("orders") { listadoSeguimientoPedidos(navController = navController) }//{ OrdersApp(navController = rememberNavController()) }
 
-            composable("orders") { listadoSeguimientoPedidos(navController) }//{ OrdersApp(navController = rememberNavController()) }
 
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
-            composable("detallesp") { detallePedido( navController,pedidoId = "1") }
+            //composable("detallesp") { detallePedido( navController,pedidoId = "1") }
+            composable("detallePedido/{id}"){backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id")
+                detallePedido(navController,pedidoId=id)
+            }
             composable("notifica") { Notificaciones() }
             composable("historialnotifica") { HistorialNotificaciones() }
             composable("faqyg") { FAQScreen() }
@@ -166,14 +169,12 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 navController.navigate("orders")
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
             })
+
+            /*
             DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
-                navController.navigate("orders")  // Navegar a la lista de pedidos
+                navController.navigate("detallesp")  // Navegar a la lista de pedidos
                 scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
-            })
-            DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
-                navController.navigate("detallesp")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
-            })
+            })*/
 
             DrawerItem(icon = Icons.Default.Email, text = "Enviar Sugerencias", onClick = {
                 navController.navigate("sugerencias")

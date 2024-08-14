@@ -6,7 +6,7 @@ import retrofit2.http.GET
 
 interface SeguimientoPedidoClient {
     //@GET("/posts")
-    @GET("posiciones/cliente/"+1)
+    @GET("posiciones/cliente/"+3)
     //suspend fun getPosts(): Response<List<PostResponse>>
     suspend fun getSeguimientoPedido(): Response<List<SeguimientoPedidoResponse>>
 }
