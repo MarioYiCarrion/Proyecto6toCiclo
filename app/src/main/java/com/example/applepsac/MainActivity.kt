@@ -16,7 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.applepsac.auth.view.DetallePedidoScreen
+
 import com.example.applepsac.auth.view.detallePedido
 import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
