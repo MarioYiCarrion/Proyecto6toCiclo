@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.applepsac.auth.view.DetallesdelPedido
 import com.example.applepsac.auth.view.FAQScreen
 import com.example.applepsac.auth.view.HistorialNotificaciones
 import com.example.applepsac.auth.view.Notificaciones
@@ -114,7 +115,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
-            composable("detallesp") { com.example.applepsac.auth.view.DetallesdelPedido() }
+            composable("detallesp") { DetallesdelPedido() }
             composable("notifica") { Notificaciones() }
             composable("historialnotifica") { HistorialNotificaciones() }
             composable("faqyg") { FAQScreen() }
@@ -210,7 +211,7 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 .align(Alignment.BottomStart)
                 .padding(start = 16.dp, bottom = 48.dp, end = 16.dp)
         ) {
-            DrawerItem(icon = Icons.Default.Close, text = "Salir", onClick = onExitClick)
+            DrawerItem(icon = Icons.Default.ExitToApp, text = "Salir", onClick = onExitClick)
         }
     }
 }
