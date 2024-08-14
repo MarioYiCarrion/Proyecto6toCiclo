@@ -731,7 +731,6 @@ fun BestSellerItems() {
         }
     }
 }
-
 @Composable
 fun BestSellerItem(
     imagePainter: Painter,
@@ -739,8 +738,8 @@ fun BestSellerItem(
 ) {
     Card(
         modifier = Modifier
-            .width(200.dp) // Tamaño fijo para el Card
-            .height(250.dp), // Tamaño fijo para el Card
+            .width(250.dp) // Aumentar el ancho del Card
+            .height(250.dp), // Mantener el mismo tamaño de altura
         shape = RoundedCornerShape(10.dp),
         elevation = 4.dp
     ) {
@@ -760,9 +759,9 @@ fun BestSellerItem(
             )
             Text(
                 text = title,
-                fontSize = 14.sp,
+                fontSize = 12.sp, // Reducir el tamaño del texto
                 color = Color.Black,
-                maxLines = 2,
+                maxLines = 3, // Aumentar el número de líneas permitidas
                 overflow = TextOverflow.Ellipsis
             )
         }
