@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -47,12 +48,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
     val database = Firebase.database
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
     NavHost(navController = navController, startDestination = "loginScreen") {
         composable("loginScreen") {
             LoginScreen(navController = navController, context = LocalContext.current)
         }
-        composable("home") {
+        composable("detallesp") {
             listadoSeguimientoPedidos(navController)
         }
         composable("pantallaPrincipal") {
