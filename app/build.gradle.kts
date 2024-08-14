@@ -67,6 +67,9 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
 
+    //pager
+    implementation ("com.google.accompanist:accompanist-pager:0.24.13-rc")
+
     // Compose Libraries
     implementation("androidx.compose.ui:ui:1.6.8")
     implementation("androidx.compose.material:material:1.6.8")
@@ -109,6 +112,7 @@ dependencies {
     // Debugging Libraries
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation(kotlin("script-runtime"))
 }
 
 
