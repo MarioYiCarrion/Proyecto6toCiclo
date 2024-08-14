@@ -39,10 +39,15 @@ import com.example.applepsac.auth.viewmodel.SeguimientoPedidoViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import android.net.Uri
+import androidx.compose.foundation.border
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -56,6 +61,8 @@ import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.delay
 
 @Composable
@@ -142,7 +149,29 @@ fun TopBar(scope: CoroutineScope, scaffoldState: ScaffoldState, title: String) {
 }
 
 @Composable
-fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, scaffoldState: ScaffoldState, scope: CoroutineScope) {
+fun DrawerContent(
+    navController: NavHostController,
+    onExitClick: () -> Unit,
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope
+) {
+    val user = FirebaseAuth.getInstance().currentUser
+    val database = FirebaseDatabase.getInstance().reference.child("clientes")
+    val (name, setName) = remember { mutableStateOf("") }
+    val (email, setEmail) = remember { mutableStateOf("") }
+
+    // Obtener los datos del usuario desde Firebase
+    LaunchedEffect(user) {
+        user?.uid?.let { uid ->
+            database.child(uid).get().addOnSuccessListener { snapshot ->
+                val userName = snapshot.child("nombre").getValue(String::class.java)
+                val userEmail = snapshot.child("correo").getValue(String::class.java)
+                setName(userName ?: "Nombre del Usuario")
+                setEmail(userEmail ?: "correo@ejemplo.com")
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -154,57 +183,85 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
                 .fillMaxHeight()
                 .padding(top = 24.dp, start = 16.dp, end = 16.dp)
         ) {
+            // Perfil del usuario
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.avatar), // Reemplaza con el nombre correcto de tu recurso drawable
+                    contentDescription = "Avatar",
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                        .border(2.dp, Color.Gray, CircleShape)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text(text = name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    Text(text = email, color = Color.Gray)
+                }
+            }
+
+            Divider(color = Color.Gray, thickness = 1.dp)
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Menú
             Text(
                 text = "Menú",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+
+            // Opciones del menú
             DrawerItem(icon = Icons.Default.Home, text = "Home", onClick = {
                 navController.navigate("home")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
             DrawerItem(icon = Icons.Default.Place, text = "Seguimiento de Pedido", onClick = {
                 navController.navigate("orders")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
-
             DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
                 navController.navigate("detallesp")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
-
             DrawerItem(icon = Icons.Default.Email, text = "Enviar Sugerencias", onClick = {
                 navController.navigate("sugerencias")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
             DrawerItem(icon = Icons.Default.Star, text = "Califícanos", onClick = {
                 navController.navigate("rate")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
             DrawerItem(icon = Icons.Default.Assignment, text = "FAQ y Guias de Uso", onClick = {
                 navController.navigate("faqyg")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
             DrawerItem(icon = Icons.Default.AddAlert, text = "Notificaciones", onClick = {
                 navController.navigate("notifica")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
             DrawerItem(icon = Icons.Default.Campaign, text = "Historial de Notificaciones", onClick = {
                 navController.navigate("historialnotifica")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
             DrawerItem(icon = Icons.Default.Info, text = "Actualizaciones del Sistema", onClick = {
                 navController.navigate("actualizaciones")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
             DrawerItem(icon = Icons.Default.Settings, text = "Configuraciones", onClick = {
                 navController.navigate("settings")
-                scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+                scope.launch { scaffoldState.drawerState.close() }
             })
+
             Spacer(modifier = Modifier.weight(1f))
         }
+
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
@@ -214,6 +271,8 @@ fun DrawerContent(navController: NavHostController, onExitClick: () -> Unit, sca
         }
     }
 }
+
+
 
 @Composable
 fun DrawerItem(icon: ImageVector, text: String, onClick: (() -> Unit)? = null) {
