@@ -190,6 +190,7 @@ fun DrawerContent(
                 .padding(top = 24.dp, start = 16.dp, end = 16.dp)
         ) {
             // Perfil del usuario
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -197,7 +198,7 @@ fun DrawerContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.avatar), // Reemplaza con el nombre correcto de tu recurso drawable
+                    painter = painterResource(id = R.drawable.modelo2), // Reemplaza con el nombre correcto de tu recurso drawable
                     contentDescription = "Avatar",
                     modifier = Modifier
                         .size(64.dp)
@@ -206,8 +207,18 @@ fun DrawerContent(
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Text(text = name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Text(text = email, color = Color.Gray)
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            painter = painterResource(id = R.drawable.splash), // Reemplaza con el nombre correcto de tu recurso drawable para el splash
+                            contentDescription = "Icono",
+                            modifier = Modifier
+                                .size(40.dp) // Ajusta el tamaño según sea necesario
+                                .offset(y = 4.dp) // Desplaza el icono hacia abajo
+                        )
+                       // Spacer(modifier = Modifier.width(8.dp)) // Espacio entre el icono y el texto del nombre
+                        Text(text = name, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                    }
+                    Text(text = email, color = Color.Gray) // Email debajo del nombre
                 }
             }
 
