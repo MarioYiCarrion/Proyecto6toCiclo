@@ -47,7 +47,6 @@ import com.example.applepsac.auth.view.FAQScreen
 import com.example.applepsac.auth.view.HistorialNotificaciones
 import com.example.applepsac.auth.view.Notificaciones
 import com.example.applepsac.auth.view.detallePedido
-import com.example.applepsac.auth.view.DetallePedidoScreen
 import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 
 @Composable
