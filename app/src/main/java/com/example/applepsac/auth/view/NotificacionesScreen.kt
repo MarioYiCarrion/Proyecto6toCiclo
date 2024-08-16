@@ -15,6 +15,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,21 +24,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.applepsac.R
+import com.example.applepsac.auth.data.network.request.Notificacion
+import com.example.applepsac.auth.viewmodel.NotificacionesViewModel
 import com.example.applepsac.ui.theme.Poppins
 import com.example.applepsac.ui.theme.ReemKufi
 
 
 @Composable
-fun Notificaciones(){
-    Column() {
-        MainToolbar()
-        NotificationList()
+fun Notificaciones(viewModel: NotificacionesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    // Cargar las notificaciones cuando se monta la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.cargarNotificaciones(userId = 1) // Reemplaza con el ID de usuario correspondiente
     }
 
+    Column {
+        MainToolbar()
+        NotificationList(notificaciones = viewModel.notificaciones)
+    }
 }
 
 @Composable
-fun NotificationList() {
+fun NotificationList(notificaciones: List<Notificacion>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,33 +60,17 @@ fun NotificationList() {
                 fontSize = 14.sp
             )
 
-            NotificationItem(
-                icon = R.drawable.entregado,
-                mainText = "Entregado",
-                subText = "Pedido entregado exitosamente"
-            )
-            NotificationItem(
-                icon = R.drawable.entransito,
-                mainText = "En Transito",
-                subText = "Su pedido ya se encuentra en Ruta"
-            )
-            NotificationItem(
-                icon = R.drawable.procesandopedido,
-                mainText = "Procesando Pedido",
-                subText = "Se esta enpacando su pedido"
-            )
-            NotificationItem(
-                icon = R.drawable.pedidoaceptado,
-                mainText = "Pedido Aceptado",
-                subText = "Su pedido ha sido aceptado "
-            )
+            notificaciones.forEach { notificacion ->
+                NotificationItem(
+                    icon = R.drawable.notificacion, // Usa un ícono genérico o específico
+                    mainText = notificacion.descripcion,
+                    subText = "Estado: ${notificacion.estado}" // O cualquier otro campo relevante
+                )
+            }
         }
-
-
-
-
     }
 }
+
 
 @Composable
 fun NotificationItem(icon: Int, mainText: String, subText: String) {

@@ -15,6 +15,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,21 +24,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.applepsac.R
+import com.example.applepsac.auth.data.network.request.HistorialNotificacion
+import com.example.applepsac.auth.viewmodel.HistorialNotificacionesViewModel
 import com.example.applepsac.ui.theme.Poppins
 import com.example.applepsac.ui.theme.ReemKufi
-
 @Composable
-fun HistorialNotificaciones(){
-    Column() {
-        MainToolbar1()
-        NotificationList1()
+fun HistorialNotificaciones(viewModel: HistorialNotificacionesViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    // Cargar el historial de notificaciones cuando se monta la pantalla
+    LaunchedEffect(Unit) {
+        viewModel.cargarHistorialNotificaciones(userId = 1) // Reemplaza con el ID de usuario correspondiente
     }
 
+    Column {
+        MainToolbar1()
+        NotificationList1(notificaciones = viewModel.historialNotificaciones)
+    }
 }
 
-
 @Composable
-fun NotificationList1() {
+fun NotificationList1(notificaciones: List<HistorialNotificacion>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -53,97 +58,14 @@ fun NotificationList1() {
                 fontSize = 14.sp
             )
 
-            NotificationItem1(
-                icon = R.drawable.entregado,
-                mainText = "Entregado",
-                subText = "Pedido entregado exitosamente"
-            )
-            NotificationItem1(
-                icon = R.drawable.entransito,
-                mainText = "En Transito",
-                subText = "Su pedido ya se encuentra en Ruta"
-            )
-            NotificationItem1(
-                icon = R.drawable.procesandopedido,
-                mainText = "Procesando Pedido",
-                subText = "Se esta enpacando su pedido"
-            )
-            NotificationItem1(
-                icon = R.drawable.pedidoaceptado,
-                mainText = "Pedido Aceptado",
-                subText = "Su pedido ha sido aceptado "
-            )
+            notificaciones.forEach { notificacion ->
+                NotificationItem1(
+                    icon = R.drawable.notificacion, // Usa un ícono genérico o específico
+                    mainText = notificacion.descripcion,
+                    subText = "Estado: ${notificacion.estado}" // O cualquier otro campo relevante
+                )
+            }
         }
-        item {
-
-            Text(
-                text = "Viernes, 2 Agosto",
-                fontFamily = Poppins,
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(top = 20.dp)
-            )
-
-            NotificationItem1(
-                icon = R.drawable.entregado,
-                mainText = "Entregado",
-                subText = "Pedido entregado exitosamente"
-            )
-            NotificationItem1(
-                icon = R.drawable.entransito,
-                mainText = "En Transito",
-                subText = "Su pedido ya se encuentra en Ruta"
-            )
-            NotificationItem1(
-                icon = R.drawable.procesandopedido,
-                mainText = "Procesando Pedido",
-                subText = "Se esta enpacando su pedido"
-            )
-            NotificationItem1(
-                icon = R.drawable.pedidoaceptado,
-                mainText = "Pedido Aceptado",
-                subText = "Su pedido ha sido aceptado "
-            )
-
-        }
-        item {
-
-            Text(
-                text = "Jueves, 1 Agosto",
-                fontFamily = Poppins,
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(top = 20.dp)
-            )
-
-            NotificationItem1(
-                icon = R.drawable.entregado,
-                mainText = "Entregado",
-                subText = "Pedido entregado exitosamente"
-            )
-            NotificationItem1(
-                icon = R.drawable.entransito,
-                mainText = "En Transito",
-                subText = "Su pedido ya se encuentra en Ruta"
-            )
-            NotificationItem1(
-                icon = R.drawable.procesandopedido,
-                mainText = "Procesando Pedido",
-                subText = "Se esta enpacando su pedido"
-            )
-            NotificationItem1(
-                icon = R.drawable.pedidoaceptado,
-                mainText = "Pedido Aceptado",
-                subText = "Su pedido ha sido aceptado "
-            )
-
-        }
-
-
-
-
     }
 }
 
@@ -158,9 +80,7 @@ fun NotificationItem1(icon: Int, mainText: String, subText: String) {
             modifier = Modifier
                 .padding(vertical = 10.dp)
                 .fillMaxWidth()
-                .height(40.dp)
-//            .border(width = 1.dp, shape = RectangleShape, color = IconColor)
-            ,
+                .height(40.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
