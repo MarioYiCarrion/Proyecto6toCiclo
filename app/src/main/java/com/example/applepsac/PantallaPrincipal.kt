@@ -820,7 +820,7 @@ fun BestSellerItem(
                 text = title,
                 fontSize = 12.sp, // Reducir el tamaño del texto
                 color = Color.Black,
-                maxLines = 3, // Aumentar el número de líneas permitidas
+                maxLines = 2, // Aumentar el número de líneas permitidas
                 overflow = TextOverflow.Ellipsis
             )
         }
