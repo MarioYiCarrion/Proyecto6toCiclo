@@ -57,6 +57,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.applepsac.auth.view.FAQScreen
 import com.example.applepsac.auth.view.HistorialNotificaciones
 import com.example.applepsac.auth.view.Notificaciones
+import com.example.applepsac.auth.view.detallePedido
 import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -88,6 +89,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
         "sugerencias" -> "Enviar Sugerencias"
         "rate" -> "Califícanos"
         "detallesp" -> "Detalles de Pedidos"
+        "detallePedido/{id}" -> "Detalles de Pedidos"
         "settings" -> "Configuraciones"
         "actualizaciones" -> "Actualizaciones del Sistema"
         "notifica" -> "Notificaciones"
@@ -117,7 +119,11 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen() }
             composable("contact") { ContactScreen() }
-            composable("orders") { listadoSeguimientoPedidos(navController)}//{ OrdersApp(navController = rememberNavController()) }
+            composable("orders") { listadoSeguimientoPedidos(navController)}
+            composable("detallePedido/{id}"){backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id")
+                detallePedido(navController,pedidoId=id)
+            }
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
