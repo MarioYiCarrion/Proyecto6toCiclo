@@ -22,8 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.applepsac.auth.data.network.request.Comentario
+import com.example.applepsac.core.retrofit.RetrofitClient
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.Call
 
 @Composable
 fun CalificanosScreen() {
@@ -33,23 +36,53 @@ fun CalificanosScreen() {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF0F0F0)),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
+    val enviarCalificacion: () -> Unit = {
+        coroutineScope.launch {
+            if (selectedStars == 0 || selectedFace == 0) {
+                snackbarHostState.showSnackbar("Por favor, califique ambas secciones")
+                return@launch
+            }
+
+            isSending = true
+
+            // Calcular promedio
+            val promedio = (selectedStars + selectedFace) / 2.0f
+
+            val comentario = Comentario(
+                descripcion = "Calificación enviada desde la app",
+                fecha = "2025-03-23",
+                califica = promedio
+            )
+
+            RetrofitClient.instance.enviarComentario(comentario).enqueue(object : retrofit2.Callback<Void> {
+                override fun onResponse(call: Call<Void>, response: retrofit2.Response<Void>) {
+                    isSending = false
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("Gracias por su Calificación")
+                        selectedStars = 0
+                        selectedFace = 0
+                    }
+                }
+
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    isSending = false
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar("Error al enviar la calificación")
+                    }
+                }
+            })
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF0F0F0)), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             RatingSection(
                 title = "Facilidad",
                 itemCount = 5,
                 selectedItem = selectedStars,
                 onItemSelected = { selectedStars = it },
                 iconProvider = { Icons.Default.Star },
-                activeColor = Color(0xFFBF360C), // Naranja oscuro
+                activeColor = Color(0xFFBF360C),
                 inactiveColor = Color.Gray
             )
 
@@ -76,29 +109,16 @@ fun CalificanosScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            AnimatedButton(
-                isSending = isSending,
-                onClick = {
-                    coroutineScope.launch {
-                        isSending = true
-                        delay(2000)
-                        isSending = false
-                        snackbarHostState.showSnackbar("Gracias por su Calificación")
-                        selectedStars = 0
-                        selectedFace = 0
-                    }
-                }
-            )
+            AnimatedButton(isSending = isSending, onClick = enviarCalificacion)
         }
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         SnackbarHost(hostState = snackbarHostState)
     }
 }
+
+
 
 @Composable
 fun RatingSection(
