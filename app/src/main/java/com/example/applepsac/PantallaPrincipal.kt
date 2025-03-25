@@ -57,6 +57,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.applepsac.auth.view.FAQScreen
 import com.example.applepsac.auth.view.HistorialNotificaciones
 import com.example.applepsac.auth.view.Notificaciones
+import com.example.applepsac.auth.view.detallePedido
 import com.example.applepsac.auth.view.listadoSeguimientoPedidos
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -67,14 +68,6 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
-
-    ////val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = viewModel()
-
-    //val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()
-
-    //// Usa el ViewModel aquí
-    //val seguimientos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
-    //val seguimientoPedidos by seguimientoPedidoViewModel.seguimientos.collectAsState()
 
 
     val navController = rememberNavController()
@@ -88,6 +81,7 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
         "sugerencias" -> "Enviar Sugerencias"
         "rate" -> "Califícanos"
         "detallesp" -> "Detalles de Pedidos"
+        "detallePedido/{id}" -> "Detalles de Pedidos"
         "settings" -> "Configuraciones"
         "actualizaciones" -> "Actualizaciones del Sistema"
         "notifica" -> "Notificaciones"
@@ -115,9 +109,19 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
         ) {
             composable("home") { MainContent(navController) }
             composable("settings") { SettingsScreen(navController) }
-            composable("edit") { EditProfileScreen() }
+            composable("edit") { EditProfileScreen(navController) }
             composable("contact") { ContactScreen() }
-            composable("orders") { listadoSeguimientoPedidos(navController)}//{ OrdersApp(navController = rememberNavController()) }
+            composable("orders") { listadoSeguimientoPedidos(navController) }//{ OrdersApp(navController = rememberNavController()) }
+
+            //composable("detallePedido/{id}") { backStackEntry ->
+            //    val id = backStackEntry.arguments?.getString("id")
+            //    DetallePedidoScreen(id)
+            //}
+            composable("orders") { listadoSeguimientoPedidos(navController)}
+            composable("detallePedido/{id}"){backStackEntry ->
+                val id = backStackEntry.arguments?.getString("id")
+                detallePedido(navController,pedidoId=id)
+            }
             composable("rate") { CalificanosScreen() }
             composable("sugerencias") { EnviarSugerencias() }
             composable("actualizaciones") { HistorialActualizaciones() }
@@ -226,10 +230,15 @@ fun DrawerContent(
                 navController.navigate("orders")
                 scope.launch { scaffoldState.drawerState.close() }
             })
-            DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
-                navController.navigate("detallesp")
-                scope.launch { scaffoldState.drawerState.close() }
-            })
+            //DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
+            //    navController.navigate("detallesp")
+            //    scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            //})
+
+            //DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
+            //   navController.navigate("detallesp")
+            //  scope.launch { scaffoldState.drawerState.close() }
+            //})
             DrawerItem(icon = Icons.Default.Email, text = "Enviar Sugerencias", onClick = {
                 navController.navigate("sugerencias")
                 scope.launch { scaffoldState.drawerState.close() }
@@ -336,25 +345,25 @@ fun MainContent(navController: NavController) {
     }
 
 
-   /* Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 16.dp)
-            .statusBarsPadding()
-            .navigationBarsPadding(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "¡Bienvenido $nombreCliente!",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h4,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.SansSerif,
-            color = Color(0xFF003366),
-            modifier = Modifier.padding(16.dp)
-        )
-    }*/
+    /* Column(
+         modifier = Modifier
+             .fillMaxSize()
+             .padding(top = 16.dp)
+             .statusBarsPadding()
+             .navigationBarsPadding(),
+         verticalArrangement = Arrangement.Center,
+         horizontalAlignment = Alignment.CenterHorizontally
+     ) {
+         Text(
+             text = "¡Bienvenido $nombreCliente!",
+             textAlign = TextAlign.Center,
+             style = MaterialTheme.typography.h4,
+             fontWeight = FontWeight.Bold,
+             fontFamily = FontFamily.SansSerif,
+             color = Color(0xFF003366),
+             modifier = Modifier.padding(16.dp)
+         )
+     }*/
 }
 
 @Composable

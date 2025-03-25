@@ -2,6 +2,7 @@ package com.example.applepsac
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -150,11 +151,10 @@ private fun loginUser(
                         apply()
                     }
                 }
-                // Inicio de sesión exitoso, navegar a la pantalla principal
+
                 navController.navigate("pantallaPrincipal")
             } else {
-                // Error en el inicio de sesión, mostrar mensaje o manejar el error
-                // task.exception?.message puede ser útil para obtener detalles del error
+                Toast.makeText(context, "Credenciales Incorrectas", Toast.LENGTH_SHORT).show()
             }
         }
 }

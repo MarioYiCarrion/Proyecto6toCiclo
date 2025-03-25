@@ -48,8 +48,12 @@ fun listadoSeguimientoPedidos(navController: NavController, seguimientoPedidoVie
     }
 }
 
+
+//@Composable fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse){
+
 @Composable
 fun InfoCard() {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,8 +98,18 @@ fun ItemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse, navCo
             ) {
                 Column {
                     Text(
-                        text = "Nro. ${seguimientoPedidoResponse.id}",
+                        text = "Nro.Pedido ${seguimientoPedidoResponse.t_pedido_id}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Nro.Posición ${seguimientoPedidoResponse.id}",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Producto: ${seguimientoPedidoResponse.descripcion}",
+                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -103,11 +117,7 @@ fun ItemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse, navCo
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Descripción: ${seguimientoPedidoResponse.descripcion}",
-                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
+
                     Text(
                         text = "Estado: ${seguimientoPedidoResponse.estado}",
                         style = MaterialTheme.typography.bodyMedium.copy(fontSize = 14.sp, color = Color.Gray)

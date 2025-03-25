@@ -68,19 +68,19 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     //pager
-    implementation ("com.google.accompanist:accompanist-pager:0.24.13-rc")
+    implementation ("com.google.accompanist:accompanist-pager:0.28.0")
 
     // Compose Libraries
-    implementation("androidx.compose.ui:ui:1.6.8")
-    implementation("androidx.compose.material:material:1.6.8")
+    implementation("androidx.compose.ui:ui:1.7.6")
+    implementation("androidx.compose.material:material:1.7.6")
     implementation("androidx.compose.material3:material3:1.2.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.8")
-    implementation ("androidx.compose.material:material-icons-extended:1.6.8")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.7.6")
+    implementation ("androidx.compose.material:material-icons-extended:1.7.6")
 
     // Firebase Libraries
-    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth-ktx:23.0.0")
+    implementation("com.google.firebase:firebase-auth-ktx:23.1.0")
     implementation(libs.firebase.database.ktx)
 
     // Retrofit Libraries
@@ -91,16 +91,17 @@ dependencies {
     //implementation("com.google.dagger:hilt-android:2.44")
     //kapt("com.google.dagger:hilt-android-compiler:2.44")
     implementation(libs.hilt.android)
+    implementation(libs.androidx.ui.test.android)
     kapt(libs.hilt.android.compiler)
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.androidx.hilt.navigation.compose.v120)
 
     // Jetpack Compose integration
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Additional Libraries
     implementation(libs.androidx.runtime.livedata)
-    implementation ("com.google.accompanist:accompanist-pager:0.28.0")
-    implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")
+    implementation (libs.google.accompanist.pager)
+    implementation (libs.accompanist.pager.indicators)
 
     // Testing Libraries
     testImplementation(libs.junit)
@@ -113,6 +114,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(kotlin("script-runtime"))
+    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+
 }
 
 
