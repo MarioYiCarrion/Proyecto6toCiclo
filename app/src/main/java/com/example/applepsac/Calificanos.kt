@@ -28,6 +28,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
 
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 @Composable
 fun CalificanosScreen() {
     var selectedStars by remember { mutableIntStateOf(0) }
@@ -45,12 +49,15 @@ fun CalificanosScreen() {
 
             isSending = true
 
+            // Obtener fecha actual
+            val fechaActual = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
             // Calcular promedio
             val promedio = (selectedStars + selectedFace) / 2.0f
 
             val comentario = Comentario(
                 descripcion = "Calificación enviada desde la app",
-                fecha = "2025-03-23",
+                fecha = fechaActual, // Enviar la fecha actual
                 califica = promedio
             )
 
@@ -117,6 +124,7 @@ fun CalificanosScreen() {
         SnackbarHost(hostState = snackbarHostState)
     }
 }
+
 
 
 

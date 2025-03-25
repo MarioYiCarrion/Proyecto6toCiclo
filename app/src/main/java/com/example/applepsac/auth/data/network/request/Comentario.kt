@@ -6,5 +6,5 @@ data class Comentario(
     val estado: String = "A",
     val activo: Int = 1,
     val califica: Float,
-    val t_usuario_id: Int = 1 // Aquí puedes cambiarlo dinámicamente
+    val t_usuario_id: Int = 1 // usuario prederteminado para que sea anonimo
 )
