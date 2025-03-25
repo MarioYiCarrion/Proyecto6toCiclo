@@ -69,14 +69,6 @@ import kotlinx.coroutines.delay
 @Composable
 fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
 
-    ////val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = viewModel()
-
-    //val seguimientoPedidoViewModel: SeguimientoPedidoViewModel = hiltViewModel()
-
-    //// Usa el ViewModel aquí
-    //val seguimientos = seguimientoPedidoViewModel.seguimientos.observeAsState(emptyList())
-    //val seguimientoPedidos by seguimientoPedidoViewModel.seguimientos.collectAsState()
-
 
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
@@ -117,8 +109,16 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
         ) {
             composable("home") { MainContent(navController) }
             composable("settings") { SettingsScreen(navController) }
-            composable("edit") { EditProfileScreen() }
+            composable("edit") { EditProfileScreen(navController) }
             composable("contact") { ContactScreen() }
+
+            composable("orders") { listadoSeguimientoPedidos(navController) }//{ OrdersApp(navController = rememberNavController()) }
+
+            //composable("detallePedido/{id}") { backStackEntry ->
+            //    val id = backStackEntry.arguments?.getString("id")
+            //    DetallePedidoScreen(id)
+            //}
+
             composable("orders") { listadoSeguimientoPedidos(navController)}
             composable("detallePedido/{id}"){backStackEntry ->
                 val id = backStackEntry.arguments?.getString("id")
@@ -232,10 +232,15 @@ fun DrawerContent(
                 navController.navigate("orders")
                 scope.launch { scaffoldState.drawerState.close() }
             })
-            DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
-                navController.navigate("detallesp")
-                scope.launch { scaffoldState.drawerState.close() }
-            })
+            //DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
+            //    navController.navigate("detallesp")
+            //    scope.launch { scaffoldState.drawerState.close() } // Cierra el menú lateral
+            //})
+
+            //DrawerItem(icon = Icons.Default.AddBusiness, text = "Detalles de Pedidos", onClick = {
+            //   navController.navigate("detallesp")
+            //  scope.launch { scaffoldState.drawerState.close() }
+            //})
             DrawerItem(icon = Icons.Default.Email, text = "Enviar Sugerencias", onClick = {
                 navController.navigate("sugerencias")
                 scope.launch { scaffoldState.drawerState.close() }
@@ -342,25 +347,25 @@ fun MainContent(navController: NavController) {
     }
 
 
-   /* Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 16.dp)
-            .statusBarsPadding()
-            .navigationBarsPadding(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "¡Bienvenido $nombreCliente!",
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h4,
-            fontWeight = FontWeight.Bold,
-            fontFamily = FontFamily.SansSerif,
-            color = Color(0xFF003366),
-            modifier = Modifier.padding(16.dp)
-        )
-    }*/
+    /* Column(
+         modifier = Modifier
+             .fillMaxSize()
+             .padding(top = 16.dp)
+             .statusBarsPadding()
+             .navigationBarsPadding(),
+         verticalArrangement = Arrangement.Center,
+         horizontalAlignment = Alignment.CenterHorizontally
+     ) {
+         Text(
+             text = "¡Bienvenido $nombreCliente!",
+             textAlign = TextAlign.Center,
+             style = MaterialTheme.typography.h4,
+             fontWeight = FontWeight.Bold,
+             fontFamily = FontFamily.SansSerif,
+             color = Color(0xFF003366),
+             modifier = Modifier.padding(16.dp)
+         )
+     }*/
 }
 
 @Composable

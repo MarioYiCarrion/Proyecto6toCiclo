@@ -48,8 +48,12 @@ fun listadoSeguimientoPedidos(navController: NavController, seguimientoPedidoVie
     }
 }
 
+
+//@Composable fun itemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse){
+
 @Composable
 fun InfoCard() {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -99,7 +103,11 @@ fun ItemSeguimientos(seguimientoPedidoResponse: SeguimientoPedidoResponse, navCo
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
+
+                        text = "Nro.Posición ${seguimientoPedidoResponse.id}",
+
                         text = "Nro.Producto ${seguimientoPedidoResponse.id}",
+
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                     )
                     Spacer(modifier = Modifier.height(4.dp))
