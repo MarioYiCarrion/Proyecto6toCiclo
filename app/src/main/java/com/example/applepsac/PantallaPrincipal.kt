@@ -111,12 +111,14 @@ fun PantallaPrincipal(onExitClick: () -> Unit, nombreCliente: String) {
             composable("settings") { SettingsScreen(navController) }
             composable("edit") { EditProfileScreen(navController) }
             composable("contact") { ContactScreen() }
+
             composable("orders") { listadoSeguimientoPedidos(navController) }//{ OrdersApp(navController = rememberNavController()) }
 
             //composable("detallePedido/{id}") { backStackEntry ->
             //    val id = backStackEntry.arguments?.getString("id")
             //    DetallePedidoScreen(id)
             //}
+
             composable("orders") { listadoSeguimientoPedidos(navController)}
             composable("detallePedido/{id}"){backStackEntry ->
                 val id = backStackEntry.arguments?.getString("id")

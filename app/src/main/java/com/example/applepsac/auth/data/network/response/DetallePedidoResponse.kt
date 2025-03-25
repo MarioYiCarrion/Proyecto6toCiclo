@@ -6,3 +6,4 @@ data class DetallePedidoResponse(
     val descripcion_estado: String,
     val comentario: String
 )
+

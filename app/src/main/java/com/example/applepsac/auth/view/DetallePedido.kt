@@ -75,6 +75,11 @@ fun itemDetalle(detallePedidoResponse: DetallePedidoResponse) {
             ) {
                 Column {
                     Text(
+                        text = "Nro. Producto ${detallePedidoResponse.t_detalle_pedido_id}", // Aquí ya es Int, no String
+                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
                         text = "Nro. ${detallePedidoResponse.orden}", // Aquí ya es Int, no String
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
                     )
