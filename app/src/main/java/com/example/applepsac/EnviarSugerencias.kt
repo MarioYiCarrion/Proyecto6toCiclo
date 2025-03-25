@@ -33,6 +33,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.POST
+import java.text.SimpleDateFormat
+import java.util.*
+
+interface ApiService {
+    @POST("/api/comentarios")
+    suspend fun sendComment(@Body comment: Comment): Response<Void>
+}
+
+data class Comment(
+    val descripcion: String,
+    val fecha: String,
+    val estado: String = "A",
+    val activo: Int = 1,
+    val califica: Int = 0,
+    val t_usuario_id: Int = 1
+)
 
 @Composable
 fun EnviarSugerencias() {
@@ -42,6 +63,13 @@ fun EnviarSugerencias() {
     val isSending = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     val focusRequester = remember { FocusRequester() }
+
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://nodejs-mysql-restapi-test-production-895d.up.railway.app")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val apiService = retrofit.create(ApiService::class.java)
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -142,6 +170,12 @@ fun EnviarSugerencias() {
                     onClick = {
                         coroutineScope.launch {
                             isSending.value = true
+                            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                            val comment = Comment(
+                                descripcion = suggestionText.value,
+                                fecha = currentDate
+                            )
+                            apiService.sendComment(comment)
                             delay(2000)
                             isSending.value = false
                             suggestionText.value = ""
