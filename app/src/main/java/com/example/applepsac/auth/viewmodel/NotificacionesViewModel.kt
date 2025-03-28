@@ -37,4 +37,22 @@ class NotificacionesViewModel : ViewModel() {
             }
         }
     }
+
+    fun marcarComoVisto(idNotificacion: Int) {
+        viewModelScope.launch {
+            try {
+                val response = api.marcarComoVisto(idNotificacion, mapOf("visto" to 1))
+
+                if (response.isSuccessful) {
+                    Log.d("Notificaciones", "Notificación $idNotificacion marcada como vista")
+                    cargarNotificaciones(1) // Volver a cargar la lista
+                } else {
+                    Log.e("Notificaciones", "Error al actualizar notificación: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
 }

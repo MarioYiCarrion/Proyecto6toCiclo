@@ -126,8 +126,6 @@ fun CalificanosScreen() {
 }
 
 
-
-
 @Composable
 fun RatingSection(
     title: String,

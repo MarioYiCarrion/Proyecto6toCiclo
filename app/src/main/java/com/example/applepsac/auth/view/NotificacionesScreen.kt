@@ -39,12 +39,13 @@ fun Notificaciones(viewModel: NotificacionesViewModel = androidx.lifecycle.viewm
 
     Column {
         MainToolbar()
-        NotificationList(notificaciones = viewModel.notificaciones)
+        NotificationList(notificaciones = viewModel.notificaciones, viewModel = viewModel)
     }
 }
 
+
 @Composable
-fun NotificationList(notificaciones: List<Notificacion>) {
+fun NotificationList(notificaciones: List<Notificacion>, viewModel: NotificacionesViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -62,9 +63,11 @@ fun NotificationList(notificaciones: List<Notificacion>) {
 
             notificaciones.forEach { notificacion ->
                 NotificationItem(
-                    icon = R.drawable.notificacion, // Usa un ícono genérico o específico
+                    icon = R.drawable.notificacion,
                     mainText = notificacion.descripcion,
-                    subText = "Estado: ${notificacion.estado}" // O cualquier otro campo relevante
+                    subText = "Estado: ${notificacion.estado}",
+                    idNotificacion = notificacion.id, // Pasamos el ID
+                    viewModel = viewModel // Pasamos el ViewModel
                 )
             }
         }
@@ -73,9 +76,17 @@ fun NotificationList(notificaciones: List<Notificacion>) {
 
 
 @Composable
-fun NotificationItem(icon: Int, mainText: String, subText: String) {
+fun NotificationItem(
+    icon: Int,
+    mainText: String,
+    subText: String,
+    idNotificacion: Int, // Recibe el ID de la notificación
+    viewModel: NotificacionesViewModel // Recibe el ViewModel
+) {
     TextButton(
-        onClick = {},
+        onClick = {
+            viewModel.marcarComoVisto(idNotificacion) // Llamar a la función cuando se haga clic
+        },
         modifier = Modifier.fillMaxWidth(),
         contentPadding = PaddingValues(0.dp),
     ) {
@@ -83,29 +94,25 @@ fun NotificationItem(icon: Int, mainText: String, subText: String) {
             modifier = Modifier
                 .padding(vertical = 10.dp)
                 .fillMaxWidth()
-                .height(40.dp)
-//            .border(width = 1.dp, shape = RectangleShape, color = IconColor)
-            ,
+                .height(40.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Row() {
+            Row {
                 Icon(
-                    painter = painterResource(id = icon), contentDescription = "",
+                    painter = painterResource(id = icon),
+                    contentDescription = "",
                     modifier = Modifier.size(30.dp),
                     tint = Color.Black
                 )
-                Column(
-                    modifier = Modifier.padding(start = 10.dp)
-                ) {
+                Column(modifier = Modifier.padding(start = 10.dp)) {
                     Text(
                         text = mainText,
                         fontFamily = Poppins,
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black,
                         lineHeight = 10.sp,
-                        fontSize = 12.sp,
-                        letterSpacing = 0.sp
+                        fontSize = 12.sp
                     )
                     Text(
                         text = subText,
@@ -114,21 +121,22 @@ fun NotificationItem(icon: Int, mainText: String, subText: String) {
                         color = Color.Black,
                         lineHeight = 10.sp,
                         fontSize = 11.sp,
-                        letterSpacing = 0.sp,
-                        modifier = Modifier
-                            .offset(y = (-4).dp)
+                        modifier = Modifier.offset(y = (-4).dp)
                     )
                 }
             }
 
             Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_right), contentDescription = "",
+                painter = painterResource(id = R.drawable.ic_arrow_right),
+                contentDescription = "",
                 modifier = Modifier.size(24.dp),
                 tint = Color.Black
             )
         }
     }
 }
+
+
 
 @Composable
 fun MainToolbar() {
